@@ -1,0 +1,13 @@
+telegram:
+  token: 11111111:11111111111111111111111111111111111
+  name: 'shizoid_bot'
+punctuation:
+  end_sentense: '.!?'
+  all: '.!?,;:'
+anchors:
+  - shizoid_bot
+  - шизик
+  - шиза
+  - шизойд
+  - наркоман
+  - шизофазия

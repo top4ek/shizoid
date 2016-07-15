@@ -1,0 +1,20 @@
+[Unit]
+Description=<%= fetch :application %>
+After=syslog.target network.target
+
+[Service]
+Type=simple
+Environment=RAILS_ENV=production
+WorkingDirectory=<%= "#{release_path}" %>
+ExecStart=/home/<%= fetch :deploy_user %>/.rvm/wrappers/ruby-<%= fetch :rvm_ruby_version %>@<%= fetch :application %>/ruby <%= release_path %>/app/main.rb
+User=<%= fetch :deploy_user %>
+Group=<%= fetch :deploy_user %>
+UMask=0002
+RestartSec=5
+Restart=on-failure
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=<%= fetch :application %>
+
+[Install]
+WantedBy=multi-user.target

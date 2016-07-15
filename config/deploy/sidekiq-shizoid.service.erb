@@ -1,0 +1,21 @@
+[Unit]
+Description=Sidekiq for <%= fetch :application %>
+After=syslog.target network.target redis-server.service
+
+[Service]
+Type=simple
+Environment=RAILS_ENV=production
+User=<%= fetch :deploy_user %>
+Group=<%= fetch :deploy_user %>
+UMask=0002
+WorkingDirectory=<%= release_path %>
+ExecStart="/home/<%= fetch :deploy_user %>/.rvm/wrappers/ruby-<%= fetch :rvm_ruby_version %>@<%= fetch :application %>/bundle exec 'sidekiq -L log/sidekiq.log -e production >> log/sidekiq.log 2>&1'"
+ExecStop=/home/<%= fetch :deploy_user %>/.rvm/wrappers/ruby-<%= fetch :rvm_ruby_version %>@<%= fetch :application %>/bundle exec "sidekiqctl stop /home/deployer/zhelezyako/shared/tmp/pids/sidekiq.pid >> /home/<%= fetch :deploy_user %>/<%= fetch :application %>/shared/log/sidekiq.log 2>&1"
+RestartSec=10
+Restart=on-failure
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=sidekiq
+
+[Install]
+WantedBy=multi-user.target
