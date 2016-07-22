@@ -97,7 +97,7 @@ module Bot
 
     def set_gab
       percent = @text.split.second.to_i
-      return reply "0-100 allowed, Dude!" if percent < 0 || percent > 100
+      return reply "0-50 allowed, Dude!" if percent < 0 || percent > 50
       @chat.update(random_chance: percent)
       reply "Ya wohl, Lord Helmet! Setting gab to #{percent}"
     end
