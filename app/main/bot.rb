@@ -13,7 +13,11 @@ module Bot
       Bot.logger.info 'Starting bot'
       Telegram::Bot::Client.run Bot.configuration.telegram_token do |bot|
         bot.listen do |msg|
-          Message.new(bot, msg).process
+          begin
+            Message.new(bot, msg).process
+          rescue Exception => error
+            Bot.logger.error "#{error}"
+          end
         end
       end
     end
