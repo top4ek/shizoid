@@ -51,13 +51,14 @@ class Pair < ActiveRecord::Base
       first_word = pair.second&.id
       second_word = reply.word&.id
       if sentence.empty?
-        sentence = pair.second.word
+        sentence = Unicode.capitalize("#{pair.second.word} ")
         @word_ids -= [pair.second.id]
       end
-      sentence += reply.word.word if reply.word.present?
+      reply.word.present? ? sentence += "#{reply.word.word} " : break
     end
     sentence.strip!
-    Unicode.capitalize(sentence)
+    sentence += Bot.configuration.punctuation['end_sentense'].split('').sample unless Bot.configuration.punctuation['end_sentense'].include? sentence.last
+    sentence
   end
 
   def self.get_pair(chat_id:, first_id:, second_id:)

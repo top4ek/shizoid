@@ -32,6 +32,7 @@ module Bot
       @chat = ::Chat.get_chat @message
       @chat.migrate_to_chat_id @message.migrate_to_chat_id if @message.migrate_to_chat_id.present?
       if has_text?
+        Bot.logger.debug "[chat #{@chat.chat_type} #{@chat.telegram_id} bare_text] #{@message.text}"
         @text = @message.text
         @words = get_words
         @command = get_command if @text.chars.first == '/'
@@ -50,10 +51,12 @@ module Bot
     end
 
     def answer(message)
+      Bot.logger.debug "[chat #{@chat.chat_type} #{@chat.telegram_id} answer] #{message}"
       @bot.api.send_message(chat_id: @chat.telegram_id, text: message)
     end
 
     def reply(message)
+      Bot.logger.debug "[chat #{@chat.chat_type} #{@chat.telegram_id} reply] #{message}"
       @bot.api.send_message(chat_id: @chat.telegram_id, reply_to_message_id: @message.message_id, text: message)
     end
 
@@ -123,13 +126,16 @@ module Bot
     def get_command
       command = @text.split.first[1..-1].split('@').first
       return nil unless command.present?
+      Bot.logger.debug "[chat #{@chat.chat_type} #{@chat.telegram_id} get_command] #{command}"
       command.to_sym if COMMANDS.include? command.to_sym
     end
 
     def get_words
       text = @text.dup
       @message.entities.each { |entity| text[entity.offset, entity.length] = ' ' * entity.length }
-      text.split(' ')
+      result = text.split(' ').map{ |word| Unicode.downcase word }
+      Bot.logger.debug "[chat #{@chat.chat_type} #{@chat.telegram_id} get_words] #{result}"
+      result
     end
 
   end

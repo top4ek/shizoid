@@ -1,6 +1,7 @@
 telegram:
   token: 11111111:11111111111111111111111111111111111
   name: 'shizoid_bot'
+debug_level: info
 punctuation:
   end_sentense: '.!?'
   all: '.!?,;:'
