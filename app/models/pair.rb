@@ -17,11 +17,8 @@ class Pair < ActiveRecord::Base
 
     words = [ nil ]
     message.words.each do |word|
-      if Bot.configuration.punctuation['end_sentense'].include? word
-        words << nil
-      else
-        words << word
-      end
+      words << word
+      words << nil if Bot.configuration.punctuation['end_sentense'].include? word.last
     end
     words << nil unless words.last.nil?
 
@@ -44,7 +41,7 @@ class Pair < ActiveRecord::Base
 
   def self.generate_sentence(message)
     sentence = ''
-    safety_counter = 20
+    safety_counter = 50
     first_word = nil
     second_word  = @word_ids
     pair = nil
@@ -57,13 +54,9 @@ class Pair < ActiveRecord::Base
         sentence = pair.second.word
         @word_ids -= [pair.second.id]
       end
-      if reply.word.present?
-        sentence += ' ' unless Bot.configuration.punctuation['all'].include? reply.word.word
-        sentence += reply.word.word
-      end
+      sentence += reply.word.word if reply.word.present?
     end
     sentence.strip!
-    sentence += Bot.configuration.punctuation['end_sentense'].split('').sample unless sentence.empty?
     Unicode.capitalize(sentence)
   end
 

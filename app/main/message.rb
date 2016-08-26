@@ -127,17 +127,9 @@ module Bot
     end
 
     def get_words
-      text_without_entities.gsub(/\n|\r/,' ').
-        split(/\b/).
-        collect(&:strip).
-        delete_if{|e| e=='@' || e.empty?}.
-        map{ |word| Unicode.downcase word }
-    end
-
-    def text_without_entities
       text = @text.dup
       @message.entities.each { |entity| text[entity.offset, entity.length] = ' ' * entity.length }
-      text
+      text.split(' ')
     end
 
   end
