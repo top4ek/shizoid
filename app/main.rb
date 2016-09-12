@@ -10,6 +10,7 @@ require 'yaml'
 require 'logger'
 require 'digest/sha1'
 require 'date'
+require 'redis'
 # require 'pry'
 
 require_relative 'main/configuration.rb'

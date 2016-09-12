@@ -2,6 +2,7 @@ telegram:
   token: 11111111:11111111111111111111111111111111111
   name: 'shizoid_bot'
 debug_level: info
+redis_url: 'redis://127.0.0.1:6380/13'
 punctuation:
   end_sentense: '.!?'
   all: '.!?,;:'

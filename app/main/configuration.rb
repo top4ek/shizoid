@@ -5,7 +5,7 @@ module Bot
 
   class Configuration
 
-    attr_reader :telegram_token, :anchors, :root, :bot_name, :dice_roll, :punctuation, :debug_level
+    attr_reader :telegram_token, :anchors, :root, :bot_name, :dice_roll, :punctuation, :debug_level, :redis_url
 
     def initialize
       @root = ENV['PWD']
@@ -15,6 +15,7 @@ module Bot
       @anchors = @options['anchors']
       @punctuation = @options['punctuation']
       @debug_level = @options['debug_level']
+      @redis_url = @options['redis_url']
     end
   end
 end

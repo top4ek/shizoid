@@ -6,6 +6,7 @@ gem 'telegram-bot-ruby'
 gem 'i18n'
 gem 'rake'
 gem 'unicode'
+gem 'redis'
 # gem 'sidekiq'
 
 group :development do

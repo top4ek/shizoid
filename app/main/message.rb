@@ -22,7 +22,7 @@ module Bot
                           'Перспективы не очень хорошие.',
                           'Весьма сомнительно.' ]
 
-    COMMANDS = %i(set_gab get_stats ping eightball get_gab)
+    COMMANDS = %i(set_gab get_stats ping eightball get_gab cool_story)
 
     attr_reader :message, :words, :text, :chat
 
@@ -30,6 +30,7 @@ module Bot
       @bot = bot
       @message = message
       @chat = ::Chat.get_chat @message
+      @chat_context_path = "chat_context/#{@chat.id}"
       @chat.migrate_to_chat_id @message.migrate_to_chat_id if @message.migrate_to_chat_id.present?
       if has_text?
         Bot.logger.debug "[chat #{@chat.chat_type} #{@chat.telegram_id} bare_text] #{@message.text}"
@@ -86,14 +87,36 @@ module Bot
 
     private
 
+    def update_context
+      context = Bot.redis.get(@chat_context_path)
+      if context.present?
+        context = JSON.parse context
+        uniq_words = @words.uniq
+        context -= uniq_words
+        context.unshift *uniq_words
+      else
+        context = @words.uniq
+      end
+      Bot.redis.set(@chat_context_path, context.first(50)).to_json
+    end
+
     def random_answer?
       rand(100) < @chat.random_chance
     end
 
     def process_message
       Pair.learn self
+      update_context
       if has_anchors? || private? || reply_to_bot? || random_answer?
         reply = Pair.generate self
+        answer reply if reply.present?
+      end
+    end
+
+    def cool_story
+      context = Bot.redis.get(@chat_context_path)
+      if context.present?
+        reply = Pair.generate_story(self, JSON.parse(context), 50)
         answer reply if reply.present?
       end
     end

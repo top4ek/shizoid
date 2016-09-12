@@ -6,10 +6,12 @@ class Pair < ActiveRecord::Base
   belongs_to :second, class_name: 'Word'
 
   def self.generate(message)
-    using_words = message.words - Bot.configuration.punctuation['all'].split('')
-    @word_ids = Word.where(word: using_words).pluck(:id)
-    say = rand(2) + 1
-    say.times.collect { generate_sentence(message) }.join(' ')
+    generate_story(message, message.words, rand(2) + 1)
+  end
+
+  def self.generate_story(message, words, sentences)
+    @word_ids = Word.where(word: words).pluck(:id)
+    sentences.times.collect { generate_sentence(message) }.join(' ')
   end
 
   def self.learn(message)

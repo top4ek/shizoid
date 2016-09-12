@@ -1,5 +1,9 @@
 module Bot
 
+  def self.redis
+    @redis ||= Redis.new(url: Bot.configuration.redis_url)
+  end
+
   class Base
 
     def initialize

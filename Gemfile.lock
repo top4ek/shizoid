@@ -66,6 +66,7 @@ GEM
       interception (>= 0.5)
       pry
     rake (11.2.2)
+    redis (3.3.1)
     slop (3.6.0)
     sshkit (1.11.2)
       net-scp (>= 1.1.2)
@@ -98,6 +99,7 @@ DEPENDENCIES
   pry-byebug
   pry-rescue
   rake
+  redis
   telegram-bot-ruby
   unicode
 
