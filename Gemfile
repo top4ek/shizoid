@@ -7,7 +7,6 @@ gem 'i18n'
 gem 'rake'
 gem 'unicode'
 # gem 'sidekiq'
-# gem 'redis'
 
 group :development do
   gem 'capistrano', '~> 3.4'
