@@ -3,6 +3,7 @@
 /config/database.yml
 /config/options.yml
 /config/deploy.rb
+/config/deploy/production.rb
 /db/*.sqlite3
 /db/*.sqlite3-journal
 /.bundle

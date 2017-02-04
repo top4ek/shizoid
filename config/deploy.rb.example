@@ -6,7 +6,7 @@ set :scm, :git
 set :format, :pretty
 set :repo_url, 'git@github.com:top4ek/shizoid.git'
 set :rvm_type, :user
-set :rvm_ruby_version, "2.3.1"
+set :rvm_ruby_version, "2.4.0"
 set :deploy_to, "/home/#{fetch :deploy_user}/#{fetch :application}"
 set :log, "#{fetch :deploy_to}/log"
 set :keep_releases, 3
