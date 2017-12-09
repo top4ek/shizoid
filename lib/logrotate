@@ -1,0 +1,12 @@
+/home/alex/shizoid/shared/log/newrelic_agent.log
+/home/alex/shizoid/shared/log/sidekiq.log
+/home/alex/shizoid/shared/log/production.log
+{
+        rotate 7
+        daily
+        missingok
+        notifempty
+        delaycompress
+        compress
+        endscript
+}

@@ -1,40 +1,89 @@
-class Chat < ActiveRecord::Base
-  has_many :pairs
+class Chat < ApplicationRecord
+  has_many :pairs, dependent: :destroy
+  has_many :greetings, dependent: :destroy
+  has_many :singles, dependent: :destroy
+  has_many :winners, dependent: :destroy
+  has_many :urls
 
-  enum chat_type: [:personal, :faction, :supergroup, :channel]
+  enum kind: %i[personal faction supergroup channel]
 
-  after_commit :log_creation, on: :create
-  before_save :log_new_gab, if: :random_chance_changed?
-
-  def migrate_to_chat_id(new_id)
-    Bot.logger.info "[chat #{self.chat_type} #{self.telegram_id}] Migrating ID to #{new_id}"
-    self.telegram_id = new_id
-    self.save
+  def to_s
+    "#{(username || first_name || last_name || title)}"
   end
 
-  def self.get_chat(message)
-    chat = message.chat
-    telegram_id = chat.id
-    type = case chat.type
-      when 'private'
-        :personal
-      when 'group'
-        :faction
-      else
-        chat.type.to_sym
-      end
-    Chat.find_by(telegram_id: telegram_id, chat_type: chat_types[type]) ||
-      Chat.create(telegram_id: telegram_id, chat_type: chat_types[type])
+  def to_link
+    "<a href='tg://user?id=#{telegram_id}'>#{to_s}</a>"
+  end
+
+  def random_answer?(additional = 0)
+    rand(100) < (random + additional)
+  end
+
+  def generate_story
+    Pair.generate_story(self)
+  end
+
+  def generate(words)
+    Pair.generate(chat: self, words: words)
+  end
+
+  def context(ids = nil)
+    size = Rails.application.secrets.context_size
+    current = Shizoid::Redis.connection.lrange(redis_context_path, 0, size).map(&:to_i)
+    return current.shuffle if ids.nil?
+    uniq_ids = ids.uniq
+    current -= uniq_ids
+    current.unshift *uniq_ids
+    Shizoid::Redis.connection.multi do |r|
+      r.del(redis_context_path)
+      r.lpush(redis_context_path, current.first(size))
+    end
+  end
+
+  def self.names(ids)
+    names = Chat.where(telegram_id: ids).map{ |n| [n.telegram_id, n.to_s] }.to_h
+  end
+
+  def self.learn(payload)
+    chat = Chat.find_by(telegram_id: payload.chat.id) || Chat.new(telegram_id: payload.chat.id, kind: adopt_type(payload.chat.type))
+    chat.telegram_id = payload.migrate_to_chat_id unless payload.migrate_to_chat_id.nil?
+    chat.save
+    options = { id: chat.id, title: payload.chat.title, first_name: payload.chat.first_name,
+                last_name: payload.chat.last_name, username: payload.chat.username, kind: payload.chat.type }
+    ChatUpdater.perform_async(options)
+
+    if payload.from.present? && payload.chat.id != payload.from.id
+      user = Chat.find_by(telegram_id: payload.from.id) || Chat.create(telegram_id: payload.from.id, kind: :personal)
+      options = { id: user.id, title: nil, kind: 'private', first_name: payload.from.first_name,
+                  last_name: payload.from.last_name, username: payload.from.username }
+      ChatUpdater.perform_async(options)
+    end
+    chat
+  end
+
+  def update_meta(title:, first_name:, last_name:, username:, kind:)
+      self.title      = title                        if self.title != title
+      self.first_name = first_name                   if self.first_name != first_name
+      self.last_name  = last_name                    if self.last_name != last_name
+      self.username   = username                     if self.username != username
+      self.kind       = self.class.adopt_type(kind)  if self.kind != self.class.adopt_type(kind)
+      self.save
   end
 
   private
 
-  def log_new_gab
-    Bot.logger.info "[chat #{self.chat_type} #{self.telegram_id}] New gab level is set to #{self.random_chance}"
+  def redis_context_path
+    "chat_context/#{id}"
   end
 
-  def log_creation
-    Bot.logger.info "[chat #{self.chat_type} #{self.telegram_id}] Created with internal ID #{self.id}"
+  def self.adopt_type(type)
+    case type
+    when 'private'
+      :personal
+    when 'group'
+      :faction
+    else
+      type.to_sym
+    end
   end
-
 end

@@ -1,7 +1,15 @@
-#adapter: postgresql
-#encoding: unicode
-#host: 127.0.0.1
-#pool: 5
-#username: shizoid
-#password: shizoid
-#database: shizoid
+default: &default
+  adapter: postgresql
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  timeout: 5000
+
+development:
+  <<: *default
+  database: shizoid_dev
+test:
+  <<: *default
+  database: shizoid_test
+
+production:
+  <<: *default
+  database: shizoid

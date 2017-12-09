@@ -1,0 +1,15 @@
+common: &default_settings
+  license_key: 1111111111111111111111111111111111111111
+  app_name: Shizoid
+  log_level: info
+  attributes.include: [ job.sidekiq.args.*, payload, chat_id, user_id]
+development:
+  <<: *default_settings
+  app_name: Shizoid (Development)
+
+test:
+  <<: *default_settings
+  monitor_mode: false
+
+production:
+  <<: *default_settings

@@ -1,70 +1,78 @@
-class Pair < ActiveRecord::Base
-  has_many :replies
-  belongs_to :chat
+class Pair < ApplicationRecord
+  belongs_to :first, class_name: 'Word', optional: true
+  belongs_to :second, class_name: 'Word', optional: true
+  belongs_to :chat, optional: true
+  belongs_to :data_bank, optional: true
+  has_many :replies, dependent: :destroy
 
-  belongs_to :first, class_name: 'Word'
-  belongs_to :second, class_name: 'Word'
+  validate :check_chat_and_bank
 
-  def self.generate(message)
-    generate_story(message, message.words, rand(2) + 1)
+  def check_chat_and_bank
+    return false if self.id.present? == self.data_bank_id.present?
   end
 
-  def self.generate_story(message, words, sentences)
-    @word_ids = Word.where(word: words).pluck(:id)
-    sentences.times.collect { generate_sentence(message) }.join(' ')
-  end
-
-  def self.learn(message)
-    Word.learn message.words
-
-    words = [ nil ]
-    message.words.each do |word|
-      words << word
-      words << nil if Bot.configuration.punctuation['end_sentense'].include? word.last
+  class << self
+    def generate_story(chat)
+      10.times.collect { build_sentence(chat, chat.context) }.uniq.join(' ')
     end
-    words << nil unless words.last.nil?
 
-    while words.any? do
-      trigram = words.take(3)
-      words.shift
-      trigram_word_ids = trigram.map { |word| word.nil? ? nil : Word.find_by(word: word).id }
-      pair = Pair.where(chat_id: message.chat.id, first_id: trigram_word_ids[0], second_id: trigram_word_ids[1]).first ||
-        Pair.create(chat_id: message.chat.id, first_id: trigram_word_ids[0], second_id: trigram_word_ids[1])
-      reply = pair.replies.where(word_id: trigram_word_ids[2]).first
-      if reply.present?
-        reply.increment! :count
+    def generate(chat:, words:)
+      words_ids = Word.to_ids(words)
+      build_sentence(chat, words_ids) || build_sentence(chat, chat.context)
+    end
+
+    def learn(chat_id: nil, data_bank_id: nil, words:)
+      raise 'Chat OR Databank must be specified' if chat_id.nil? == data_bank_id.nil?
+      Word.learn(words)
+
+      words_array = [ nil ]
+      words.each do |word|
+        words_array << word
+        words_array << nil if Rails.application.secrets.punctuation[:end_sentense].include? word.chars.last
+      end
+      words_array << nil unless words_array.last.nil?
+
+      words_ids = Word.to_ids(words_array)
+      while words_ids.any?
+        trigram = words_ids.take 3
+        if trigram.first.nil? && trigram.third.nil? && trigram.size > 2
+          words_ids.shift(3)
+          next
+        end
+        words_ids.shift
+        pair_params = { chat_id: chat_id, data_bank_id: data_bank_id, first_id: trigram.first, second_id: trigram.second }
+        pair = Pair.includes(:replies).find_or_create_by!(pair_params)
+        reply = pair.replies.find_or_create_by(word_id: trigram.third).increment! :count
+      end
+    end
+
+    private
+
+    def build_sentence(chat, words_ids)
+      sentence = []
+      safety_counter = 50
+      pair_params = { chat: chat, first_id: nil, second_id: words_ids }
+
+      while (pair = fetch(pair_params)) && (sentence.size < safety_counter) do
+        replies = pair.replies.order(count: :desc)
+        replies_pool = 3 + replies.size / 2
+        reply = replies.limit(replies_pool).sample
+        pair_params = { chat: chat, first_id: pair.second_id, second_id: reply&.word_id }
+        sentence << pair.second_id if sentence.empty?
+        reply&.word_id.nil? ? break : sentence << reply.word_id
+      end
+      Word.to_words(sentence).join(' ').capitalize
+    end
+
+    def fetch(chat:, first_id:, second_id:)
+      if chat.data_bank_ids.any?
+        chat_ids = [ chat.id, nil ]
+        databank_ids = [ chat.data_bank_ids, nil ].flatten
       else
-        Reply.create(pair_id: pair.id, word_id: trigram_word_ids[2])
+        chat_ids = chat.id
+        data_bank_ids = nil
       end
+      Pair.includes(:replies).where(chat_id: chat_ids, data_bank_id: databank_ids, first_id: first_id, second_id: second_id).sample
     end
   end
-
-  private
-
-  def self.generate_sentence(message)
-    sentence = ''
-    safety_counter = 50
-    first_word = nil
-    second_word  = @word_ids
-    pair = nil
-    while (pair = get_pair(chat_id: message.chat.id, first_id: first_word, second_id: second_word)) && safety_counter > 0 do
-      safety_counter -= 1
-      reply = pair.replies.order(count: :desc).limit(3).sample
-      first_word = pair.second&.id
-      second_word = reply.word&.id
-      if sentence.empty?
-        sentence = Unicode.capitalize("#{pair.second.word} ")
-        @word_ids -= [pair.second.id]
-      end
-      reply.word.present? ? sentence += "#{reply.word.word} " : break
-    end
-    sentence.strip!
-    sentence += Bot.configuration.punctuation['end_sentense'].split('').sample unless Bot.configuration.punctuation['end_sentense'].include? sentence.last
-    sentence
-  end
-
-  def self.get_pair(chat_id:, first_id:, second_id:)
-    Pair.includes(:replies).where(chat_id: chat_id, first_id: first_id, second_id: second_id).where("created_at < :latest", latest: 10.minutes.ago).limit(3).sample
-  end
-
 end

@@ -1,0 +1,10 @@
+---
+:concurrency: 5
+:queues:
+  - default
+  - updating
+  - learning
+:limits:
+    default: 2
+    updating: 2
+    learning: 1

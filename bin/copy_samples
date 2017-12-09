@@ -1,0 +1,21 @@
+#!/usr/bin/env ruby
+
+require 'fileutils'
+
+rails_root = File.expand_path('../../', __FILE__)
+
+%w(
+  config/database.sample.yml
+  config/secrets.sample.yml
+).each do |file|
+  source = "#{rails_root}/#{file}"
+  target = "#{rails_root}/#{file.sub('.sample', '')}"
+  if File.exist?(target)
+    puts "#{file}: exists, skipping"
+  elsif !File.exist?(source)
+    puts "#{file}: not found"
+  else
+    FileUtils.copy(source, target)
+    puts "#{file}: OK"
+  end
+end

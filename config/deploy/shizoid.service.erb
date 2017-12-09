@@ -6,7 +6,7 @@ After=syslog.target network.target
 Type=simple
 Environment=RAILS_ENV=production
 WorkingDirectory=<%= "#{release_path}" %>
-ExecStart=/home/<%= fetch :deploy_user %>/.rvm/wrappers/ruby-<%= fetch :rvm_ruby_version %>@<%= fetch :application %>/ruby <%= release_path %>/app/main.rb
+ExecStart=/home/<%= fetch :deploy_user %>/.rvm/wrappers/ruby-<%= fetch :rvm_ruby_version %>@<%= fetch :application %>/bundle exec rails server
 User=<%= fetch :deploy_user %>
 Group=<%= fetch :deploy_user %>
 UMask=0002

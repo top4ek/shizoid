@@ -1,0 +1,126 @@
+en:
+  "true": 'Yes'
+  "false": 'No'
+  shizoid:
+    anchors:
+      - шизик
+      - шиза
+      - шизе
+      - шизу
+      - шизойд
+      - наркоман
+      - шизофазия
+      - shizoid
+    bayan:
+      - Dat Accordeon!
+      - "Wow, it's fresh."
+      - Got any new stuff?
+      - "Saw already. Boooring :("
+      - Ancient internet detected :)
+    ok:
+      - Low prices, working fast!
+      - We need world... whole world!
+      - Aye-aye, Cap.
+      - Ja wohl, Dark Helmet.
+      - Accelerating!
+    nok:
+      - "Can't stand while others working. Going to sleep."
+      - "I'm thinking, don't bother me."
+      - "Can't build here :)"
+    cool_story:
+      - "I'm too lazy now."
+      - "There's nothing in my CPU."
+      - "I'm blue, go away!"
+    help: |
+      Available commands:
+      *help* — this help :)
+      *gab* [[--set N]] — chance to say smth randomly(0-50)
+      *locale* [[--set XX]] — messages locale.
+      *status* — bot status in this chat.
+      *ping* — Pong.
+      *me* — /me like command from IRC/XMPP.
+      *bayanizator* [[--enable|--disable]] — Check-bayan function.
+      *eightball* [[вопрос]] — Classic "Yes" or "No" questions.
+      *cool_story* — Tell cool story.
+      *winner* [[--enable|--disable|--me|--current]] — Flooder of the day.
+    ids: |
+      *Chat:* %{type} %{chat}
+      *User:* %{user}
+    me:
+      - Silently silent
+      - Loudly thinking
+    ping:
+      - Pong!
+      - Huh?
+      - "I'm here!"
+      - "Ping yourself!"
+    status:
+      locale: English botlover, do you speak it? (en)
+      reply: |
+        *Active:* %{active}
+        *Locale:* %{current_locale}
+        *Available locales:* %{locales}
+        *Gab level:* %{gab}%
+        *Pairs in DB:* %{pairs}
+        *Singles in DB:* %{singles}
+        *Bayanizator:* %{check_bayan}
+        *Autoeightball:* %{auto_eightball}
+        *Winner:* %{winner}
+    winner:
+      unknown: Das partizanen О_о
+      user:
+        none:
+          - Oh, your'e not lucky.
+          - Never was.
+        top: |
+          Overall: %{count}
+          %{name} last 10 times:
+          %{dates}
+      day_html: |
+        <i>%{name}</i> of the day — %{user}
+
+        <b>Top 10 for last 365 days</b>
+        %{top}
+      top_line_html: "<b>%{position}.</b> %{user} — %{count}"
+      current_html: |
+        <b>Current statistics:</b>
+        %{top}
+      current_top_line_html: "<b>%{position}.</b> %{user} — %{count}"
+      no_one: 'No one yet :('
+      disabled: Disabled
+      default: Flooder
+    bayanizator:
+      size: I know %{size} bayans.
+    eightball:
+      empty:
+        - So?
+        - "What's question?"
+      answers:
+        - It is certain.
+        - It is decidedly so.
+        - Without a doubt!
+        - Yes — definitely.
+        - You may rely on it.
+        - As I see it, yes.
+        - Most likely.
+        - Outlook good.
+        - Signs point to yes.
+        - Yes.
+        - Reply hazy, try again.
+        - Ask again later.
+        - Better not tell you now.
+        - Cannot predict now.
+        - Concentrate and ask again.
+        - Don’t count on it.
+        - My reply is no.
+        - My sources say no.
+        - Outlook not so good.
+        - Very doubtful.
+    gab:
+      level: Wanderings at *%{chance}%*.
+      error: Naaah, set 0-50%.
+  support:
+    array:
+      words_connector: ', '
+      two_words_connector: ' and '
+      last_word_connector: ' and '
