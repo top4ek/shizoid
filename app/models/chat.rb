@@ -1,6 +1,6 @@
 class Chat < ApplicationRecord
   has_many :pairs, dependent: :destroy
-  has_many :greetings, dependent: :destroy
+  # has_many :greetings, dependent: :destroy
   has_many :singles, dependent: :destroy
   has_many :winners, dependent: :destroy
   has_many :urls

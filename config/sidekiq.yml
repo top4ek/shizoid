@@ -1,10 +1,12 @@
 ---
-:concurrency: 5
+:concurrency: 6
 :queues:
   - default
   - updating
   - learning
+  - deleting
 :limits:
     default: 2
     updating: 2
     learning: 1
+    deleting: 1

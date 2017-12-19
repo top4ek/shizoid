@@ -25,9 +25,11 @@ class ShizoidController < Telegram::Bot::UpdatesController
 
   def stop(*)
     return reply_with :message, text: nok unless admin?
-    respond_with :message, text: ok
-    bot.leave_chat chat_id: @chat.telegram_id unless @chat.personal?
-    @chat.destroy
+    bot.async(false) do
+      respond_with :message, text: ok
+      bot.leave_chat chat_id: @chat.telegram_id unless @chat.personal?
+    end
+    ChatDestroyer.perform_async(@chat.id)
   end
 
   def message(*text)
