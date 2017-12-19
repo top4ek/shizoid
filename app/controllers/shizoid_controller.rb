@@ -31,7 +31,7 @@ class ShizoidController < Telegram::Bot::UpdatesController
         bot.leave_chat chat_id: @chat.telegram_id unless @chat.personal?
       end
     rescue
-      NewRelic::Agent.notice_error('Forbidden', custom_params: { chat: chat_id, result: result })
+      NewRelic::Agent.notice_error('Forbidden', custom_params: { chat: @chat.id })
     end
     ChatDestroyer.perform_async(@chat.id)
   end
