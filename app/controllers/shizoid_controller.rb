@@ -25,9 +25,13 @@ class ShizoidController < Telegram::Bot::UpdatesController
 
   def stop(*)
     return reply_with :message, text: nok unless admin?
-    bot.async(false) do
-      respond_with :message, text: ok
-      bot.leave_chat chat_id: @chat.telegram_id unless @chat.personal?
+    begin
+      bot.async(false) do
+        respond_with :message, text: ok
+        bot.leave_chat chat_id: @chat.telegram_id unless @chat.personal?
+      end
+    rescue
+      NewRelic::Agent.notice_error('Forbidden', custom_params: { chat: chat_id, result: result })
     end
     ChatDestroyer.perform_async(@chat.id)
   end
