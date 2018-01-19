@@ -83,7 +83,7 @@ class ShizoidController < Telegram::Bot::UpdatesController
       send_typing_action
       respond_with :message, text: reply.reply
       send_typing_action
-      words = Word.to_ids(reply.reply.downcase.split(' ')) + @words
+      words = Word.to_ids(reply.reply.downcase.split(' '))
       respond_with :message, text: @chat.generate(words.uniq)
     when 'sticker'
       respond_with :sticker, sticker: reply.reply
