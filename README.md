@@ -1,9 +1,10 @@
-cap production deploy:setup
+Shizoid chat bot for telegram. Inspired by [Sulci](https://github.com/ermine/sulci) Bot.
 
-edit configs
+Sorry guys, I can't give my instance for everyone for now. 
 
-cap production deploy
-
-RAILS_ENV=production bundle exec rake db:create
-
-and :) cap production deploy
+You can run your own ;)
+1. `cap production deploy:setup`
+1. edit configs
+1. `cap production deploy`
+1. `RAILS_ENV=production bundle exec rake db:create`
+1. and :) `cap production deploy`
