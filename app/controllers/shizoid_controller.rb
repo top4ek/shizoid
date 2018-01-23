@@ -80,11 +80,11 @@ class ShizoidController < Telegram::Bot::UpdatesController
     return unless reply.present?
     case reply.reply_type
     when 'text'
-      send_typing_action
       respond_with :message, text: reply.reply
       send_typing_action
-      words = Word.to_ids(reply.reply.downcase.split(' '))
-      respond_with :message, text: @chat.generate(words.uniq)
+      words = Word.to_ids(reply.reply.downcase.split(' ').uniq)
+      text_reply = @chat.generate(words)
+      respond_with :message, text: text_reply if text_reply.present?
     when 'sticker'
       respond_with :sticker, sticker: reply.reply
     when 'document'
