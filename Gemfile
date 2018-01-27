@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-ruby '2.4.3'
+ruby '2.5.0'
 
 git_source(:github) do |repo_name|
   repo_name = "#{repo_name}/#{repo_name}" unless repo_name.include?("/")
@@ -8,7 +8,7 @@ git_source(:github) do |repo_name|
 end
 
 gem 'rails', '~> 5.1.3'
-gem 'pg'
+gem 'pg', '~> 0.21'
 gem 'puma', '~> 3.7'
 gem 'redis'
 gem 'sidekiq'

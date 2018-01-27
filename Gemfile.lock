@@ -76,12 +76,12 @@ GEM
     factory_bot_rails (4.8.2)
       factory_bot (~> 4.8.2)
       railties (>= 3.0.0)
-    ffaker (2.7.0)
+    ffaker (2.8.1)
     ffi (1.9.18)
     globalid (0.4.1)
       activesupport (>= 4.2.0)
     httpclient (2.8.3)
-    i18n (0.9.1)
+    i18n (0.9.3)
       concurrent-ruby (~> 1.0)
     ice_nine (0.11.2)
     listen (3.1.5)
@@ -96,12 +96,12 @@ GEM
     method_source (0.8.2)
     mini_mime (1.0.0)
     mini_portile2 (2.3.0)
-    minitest (5.10.3)
+    minitest (5.11.3)
     net-scp (1.2.1)
       net-ssh (>= 2.6.5)
     net-ssh (4.2.0)
-    newrelic_rpm (4.6.0.338)
-    nio4r (2.1.0)
+    newrelic_rpm (4.7.1.340)
+    nio4r (2.2.0)
     nokogiri (1.8.1)
       mini_portile2 (~> 2.3.0)
     pg (0.21.0)
@@ -113,7 +113,7 @@ GEM
       pry (>= 0.9.10, < 0.11.0)
     pry-rails (0.3.6)
       pry (>= 0.10.4)
-    puma (3.11.0)
+    puma (3.11.2)
     rack (2.0.3)
     rack-cors (1.0.2)
     rack-protection (2.0.0)
@@ -148,7 +148,7 @@ GEM
     rb-inotify (0.9.10)
       ffi (>= 0.5.0, < 2)
     redis (4.0.1)
-    rspec-core (3.7.0)
+    rspec-core (3.7.1)
       rspec-support (~> 3.7.0)
     rspec-expectations (3.7.0)
       diff-lcs (>= 1.2.0, < 2.0)
@@ -218,7 +218,7 @@ DEPENDENCIES
   ffaker
   listen
   newrelic_rpm
-  pg
+  pg (~> 0.21)
   pry
   pry-nav
   pry-rails
@@ -235,7 +235,7 @@ DEPENDENCIES
   tzinfo-data
 
 RUBY VERSION
-   ruby 2.4.3p205
+   ruby 2.5.0p0
 
 BUNDLED WITH
-   1.16.0
+   1.16.1
