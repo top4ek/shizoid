@@ -3,10 +3,10 @@ module Bayanizator
     return unless can_reply?
     reply_text = nok
     case args.first
-    when '—enable', '--enable'
+    when 'enable', 'on'
       @chat.update(bayan: true)
       reply_text = ok
-    when '—disable', '--disable'
+    when 'disable', 'off'
       @chat.update(bayan: false)
       reply_text = ok
     else

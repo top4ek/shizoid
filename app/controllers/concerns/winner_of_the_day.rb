@@ -3,24 +3,24 @@ module WinnerOfTheDay
     return unless can_reply?
     reply_text = t('.winner.no_one')
     case args.first
-    when '—enable', '--enable'
+    when 'enable', 'on'
       if args.second.present?
         @chat.update(winner: args[1..-1].join(' '))
       else
         @chat.update(winner: t('.winner.default'))
       end
       reply_text = ok
-    when '—disable', '--disable'
+    when 'disable', 'off'
       @chat.update(winner: nil)
       reply_text = ok
-    when '—me', '--me'
+    when 'me'
       top = Winner.stats(@chat.id, from.id)
       if top[:dates].present?
         reply_text = t('.winner.user.top', name: @chat.winner, dates: top[:dates].join("\n"), count: top[:count])
       else
         reply_text = t('.winner.user.none').sample
       end
-    when '—current', '--current'
+    when 'current'
       current_stats = Winner.current_stats(@chat.id).sort_by { |key, value| value }.reverse[0..9].to_h
       names = Chat.names(current_stats.keys)
       stats = current_stats.map {|user, count| [names[user] || fetch_user_info(@chat.telegram_id, user) || t('.winner.user.unknown'), count]}

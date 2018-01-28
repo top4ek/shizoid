@@ -4,8 +4,6 @@ module Status
     respond_with :message, parse_mode: :markdown,
                          text: t('.reply',
                                  active: t("#{@chat.active?}"),
-                                 current_locale: t('.locale'),
-                                 locales: I18n.available_locales.to_sentence,
                                  gab: @chat.random,
                                  pairs: @chat.pairs.size,
                                  databanks: t("#{@chat.data_bank_ids.present?}"),

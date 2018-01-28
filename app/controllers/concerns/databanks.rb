@@ -3,7 +3,7 @@ module Databanks
     return unless can_reply?
     databank_id = args.second.to_i
     case args.first
-    when '—enable', '--enable'
+    when 'enable', 'on'
       if DataBank.exists?(id: databank_id) && !@chat.data_bank_ids.include?(databank_id)
         @chat.data_bank_ids << databank_id
         @chat.save
@@ -11,7 +11,7 @@ module Databanks
       else
         reply_text = nok
       end
-    when '—disable', '--disable'
+    when 'disable', 'off'
       if @chat.data_bank_ids.include? databank_id
         @chat.data_bank_ids -= [ databank_id ]
         @chat.save

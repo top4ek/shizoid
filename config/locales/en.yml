@@ -34,15 +34,15 @@ en:
     help: |
       Available commands:
       *help* — this help :)
-      *gab* [[--set N]] — chance to say smth randomly(0-50)
-      *locale* [[--set XX]] — messages locale.
+      *gab* [[N]] — chance to say smth randomly(0-50)
+      *locale* [[XX]] — messages locale.
       *status* — bot status in this chat.
       *ping* — Pong.
       *me* — /me like command from IRC/XMPP.
-      *bayanizator* [[--enable|--disable]] — Check-bayan function.
-      *eightball* [[вопрос]] — Classic "Yes" or "No" questions.
+      *bayanizator* [[enable|disable|on|off]] — Check-bayan function.
+      *eightball* [[question]] — Classic "Yes" or "No" questions.
       *cool_story* — Tell cool story.
-      *winner* [[--enable|--disable|--me|--current]] — Flooder of the day.
+      *winner* [[enable|disable|me|current]] — Flooder of the day.
     ids: |
       *Chat:* %{type} %{chat}
       *User:* %{user}
@@ -54,15 +54,18 @@ en:
       - Huh?
       - "I'm here!"
       - "Ping yourself!"
+    locale:
+      current: English botlover, do you speak it? (en)
+      reply: |
+        *Locale:* %{current}
+        *Available locales:* %{available}
     status:
-      locale: English botlover, do you speak it? (en)
       reply: |
         *Active:* %{active}
-        *Locale:* %{current_locale}
-        *Available locales:* %{locales}
         *Gab level:* %{gab}%
         *Pairs in DB:* %{pairs}
         *Singles in DB:* %{singles}
+        *Databanks:* %{databanks}
         *Bayanizator:* %{check_bayan}
         *Autoeightball:* %{auto_eightball}
         *Winner:* %{winner}

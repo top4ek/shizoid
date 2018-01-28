@@ -7,6 +7,8 @@ class ShizoidController < Telegram::Bot::UpdatesController
   include Gab
   include Status
   include CoolStory
+  include Locale
+  include Help
   include Me
   include Ids
   include Ping

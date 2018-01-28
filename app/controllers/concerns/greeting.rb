@@ -3,11 +3,11 @@ module Greeting
     return unless can_reply?
     # reply_text = t('.status.locale')
     case args.first
-    when '—add', '--add'
-    when '—delete', '--delete'
-    when '—clear', '--clear'
-    when '—list', '--list'
-    when '—show', '--show'
+    when 'add'
+    when 'delete'
+    when 'clear'
+    when 'list'
+    when 'show'
     else
 
     end
