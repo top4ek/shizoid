@@ -102,7 +102,7 @@ class ShizoidController < Telegram::Bot::UpdatesController
       text = payload.text.downcase.dup
       payload.entities.each do |entity|
         if entity.offset+entity.length > text.size
-          NewRelic::Agent.notice_error('PayloadShort', custom_params: { chat: @chat.id, payload: payload })
+          NewRelic::Agent.notice_error('PayloadShort', custom_params: { chat: @chat.id, payload: payload.to_json })
           next
         end
         text[entity.offset, entity.length] = ' ' * entity.length unless entity.type == 'bold'
