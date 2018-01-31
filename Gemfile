@@ -27,6 +27,7 @@ end
 
 group :development, :test do
   gem 'ffaker'
+  gem 'localer'
   gem 'factory_bot_rails'
   gem 'listen'
   gem 'rspec-rails'

@@ -1,0 +1,8 @@
+# Do not check rails i18n, we use default
+Exclude:
+  - /^\.date\.*/
+  - /^\.time\.*/
+  - /^\.number\.*/
+  - /^\.errors\.*/
+  - /^\.activerecord\.*/
+  - /^\.helpers\.*/
