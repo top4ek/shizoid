@@ -38,7 +38,7 @@ class Winner < ApplicationRecord
       return winner.user_id if winner.present?
       stats = current_stats(chat_id)
       return nil unless stats.present?
-      winner_id = stats.sort_by { |key, value| value }.reverse[0..2].sample.first
+      winner_id = stats.sort_by { |_, value| value }.reverse[0..2].sample.first
       Winner.create(chat_id: chat_id, user_id: winner_id, created_at: Date.today)
       drop_stats(chat_id)
       winner_id.to_i

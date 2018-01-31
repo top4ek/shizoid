@@ -12,7 +12,7 @@ module HelperMethods
   end
 
   def new_member?
-    !!payload.new_chat_members
+    payload.new_chat_members.present?
   end
 
   def anchors?
@@ -21,7 +21,10 @@ module HelperMethods
 
   def can_delete?
     begin
-      result = bot.async(false) { bot.get_chat_member(chat_id: @chat.telegram_id, user_id: bot_id)['result']['can_delete_messages'] }
+      result = bot.async(false) do
+        bot.get_chat_member(chat_id: @chat.telegram_id,
+                            user_id: bot_id)['result']['can_delete_messages']
+      end
     rescue
       result = false
     end
@@ -45,19 +48,19 @@ module HelperMethods
   end
 
   def sticker?
-    !!payload.sticker
+    payload.sticker.present?
   end
 
   def document?
-    !!payload.document
+    payload.document.present?
   end
 
   def text?
-    !!payload.text
+    payload.text.present?
   end
 
   def reply?
-    !!payload.reply_to_message
+    payload.reply_to_message.present?
   end
 
   def command?

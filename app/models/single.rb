@@ -5,7 +5,6 @@ class Single < ApplicationRecord
   enum reply_type: %i[sticker document text]
 
   class << self
-
     def answer(chat_id, word)
       word = Word.find_by(word: word)
       return nil unless word.present?
@@ -14,16 +13,16 @@ class Single < ApplicationRecord
 
     def learn(chat_id, payload)
       key = payload.reply_to_message&.text&.split(' ')
-      answer = [ payload.text, payload.sticker, payload.document ]
+      answer = [payload.text, payload.sticker, payload.document]
       return nil unless key.present? && key.size == 1 && answer.any?
       key = key.first.downcase
       Word.learn([key])
-      if !!payload.text
+      if payload.text.present?
         text = remove_entities(payload)
-        reply = { type: :text, data: text} if text.present?
+        reply = { type: :text, data: text } if text.present?
       end
-      reply = { type: :document, data: payload.document.file_id} if !!payload.document
-      reply = { type: :sticker, data: payload.sticker.file_id} if !!payload.sticker
+      reply = { type: :document, data: payload.document.file_id } if payload.document.present?
+      reply = { type: :sticker, data: payload.sticker.file_id } if payload.sticker.present?
       if reply.present?
         Single.find_or_create_by(word_id: Word.find_by(word: key).id,
                                  chat_id: chat_id,
@@ -37,7 +36,7 @@ class Single < ApplicationRecord
     def remove_entities(message)
       text = message.text.downcase.dup
       message.entities.each do |entity|
-        if entity.offset+entity.length > text.size
+        if entity.offset + entity.length > text.size
           NewRelic::Agent.notice_error('PayloadShort', custom_params: { message: message })
           next
         end

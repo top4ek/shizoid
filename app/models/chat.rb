@@ -33,7 +33,7 @@ class Chat < ApplicationRecord
     return current.shuffle if ids.nil?
     uniq_ids = ids.uniq
     current -= uniq_ids
-    current.unshift *uniq_ids
+    current.unshift(*uniq_ids)
     Shizoid::Redis.connection.multi do |r|
       r.del(redis_context_path)
       r.lpush(redis_context_path, current.first(size))
@@ -41,11 +41,12 @@ class Chat < ApplicationRecord
   end
 
   def self.names(ids)
-    names = Chat.where(telegram_id: ids).map{ |n| [n.telegram_id, n.to_s] }.to_h
+    Chat.where(telegram_id: ids).map { |n| [n.telegram_id, n.to_s] }.to_h
   end
 
   def self.learn(payload)
-    chat = Chat.find_by(telegram_id: payload.chat.id) || Chat.new(telegram_id: payload.chat.id, kind: adopt_type(payload.chat.type))
+    chat = Chat.find_by(telegram_id: payload.chat.id) || Chat.new(telegram_id: payload.chat.id,
+                                                                  kind: adopt_type(payload.chat.type))
     chat.telegram_id = payload.migrate_to_chat_id unless payload.migrate_to_chat_id.nil?
     chat.save
     options = { id: chat.id, title: payload.chat.title, first_name: payload.chat.first_name,

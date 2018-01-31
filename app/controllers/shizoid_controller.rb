@@ -43,18 +43,17 @@ class ShizoidController < Telegram::Bot::UpdatesController
     if @chat.winner.present?
       count = 1
       count = @words.uniq.size if @words.present? && @words.size > 1
-      StatsUpdater.perform_async({ id: @chat.id, from: from.id, count: count })
+      StatsUpdater.perform_async(id: @chat.id, from: from.id, count: count)
       winner(text) unless Winner.gambled?(@chat.id)
     end
     return reply_with(:message, text: t('.bayan').sample) if bayan?
     return eightball(text) if question? && @chat.eightball?
     return unless anchors? || reply_to_bot? || @chat.random_answer? || @chat.personal?
-    if text? && !command?
-      return reply_single if @words.size == 1
-      send_typing_action
-      reply = @chat.generate(@words)
-      respond_with :message, text: reply if reply.present?
-    end
+    return unless text? && !command?
+    return reply_single if @words.size == 1
+    send_typing_action
+    reply = @chat.generate(@words)
+    respond_with :message, text: reply if reply.present?
   end
 
   private
@@ -98,18 +97,17 @@ class ShizoidController < Telegram::Bot::UpdatesController
     @chat = Chat.learn payload
     @chat.update(active: false) if payload&.left_chat_member&.id == bot_id
     I18n.locale = @chat.locale
-    if text?
-      text = payload.text.downcase.dup
-      payload.entities.each do |entity|
-        if entity.offset+entity.length > text.size
-          NewRelic::Agent.notice_error('PayloadShort', custom_params: { chat: @chat.id, payload: payload.to_json })
-          next
-        end
-        text[entity.offset, entity.length] = ' ' * entity.length unless entity.type == 'bold'
+    return unless text?
+    text = payload.text.downcase.dup
+    payload.entities.each do |entity|
+      if entity.offset + entity.length > text.size
+        NewRelic::Agent.notice_error('PayloadShort', custom_params: { chat: @chat.id, payload: payload.to_json })
+        next
       end
-      @words = text.split(' ')
-      @text = @words.join(' ')
+      text[entity.offset, entity.length] = ' ' * entity.length unless entity.type == 'bold'
     end
+    @words = text.split(' ')
+    @text = @words.join(' ')
   end
 
   def learn

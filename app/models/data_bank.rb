@@ -9,5 +9,4 @@ class DataBank < ApplicationRecord
       Pair.learn(chat_id: nil, data_bank_id: databank.id, words: words)
     end
   end
-
 end

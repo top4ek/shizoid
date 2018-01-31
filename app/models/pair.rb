@@ -8,7 +8,7 @@ class Pair < ApplicationRecord
   validate :check_chat_and_bank
 
   def check_chat_and_bank
-    return false if self.id.present? == self.data_bank_id.present?
+    return false if id.present? == data_bank_id.present?
   end
 
   class << self
@@ -25,7 +25,7 @@ class Pair < ApplicationRecord
       raise 'Chat OR Databank must be specified' if chat_id.nil? == data_bank_id.nil?
       Word.learn(words)
 
-      words_array = [ nil ]
+      words_array = [nil]
       words.each do |word|
         words_array << word
         words_array << nil if Rails.application.secrets.punctuation[:end_sentense].include? word.chars.last
@@ -40,7 +40,10 @@ class Pair < ApplicationRecord
           next
         end
         words_ids.shift
-        pair_params = { chat_id: chat_id, data_bank_id: data_bank_id, first_id: trigram.first, second_id: trigram.second }
+        pair_params = { chat_id: chat_id,
+                        data_bank_id: data_bank_id,
+                        first_id: trigram.first,
+                        second_id: trigram.second }
         pair = Pair.includes(:replies).find_or_create_by!(pair_params)
         reply = pair.replies.find_or_create_by(word_id: trigram.third).increment! :count
       end
@@ -66,13 +69,16 @@ class Pair < ApplicationRecord
 
     def fetch(chat:, first_id:, second_id:)
       if chat.data_bank_ids.any?
-        chat_ids = [ chat.id, nil ]
-        databank_ids = [ chat.data_bank_ids, nil ].flatten
+        chat_ids = [chat.id, nil]
+        databank_ids = [chat.data_bank_ids, nil].flatten
       else
         chat_ids = chat.id
         data_bank_ids = nil
       end
-      Pair.includes(:replies).where(chat_id: chat_ids, data_bank_id: databank_ids, first_id: first_id, second_id: second_id).sample
+      Pair.includes(:replies).where(chat_id: chat_ids,
+                                    data_bank_id: databank_ids,
+                                    first_id: first_id,
+                                    second_id: second_id).sample
     end
   end
 end

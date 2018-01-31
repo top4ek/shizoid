@@ -13,7 +13,7 @@ module Databanks
       end
     when 'disable', 'off'
       if @chat.data_bank_ids.include? databank_id
-        @chat.data_bank_ids -= [ databank_id ]
+        @chat.data_bank_ids -= [databank_id]
         @chat.save
         reply_text = ok
       else
@@ -21,7 +21,7 @@ module Databanks
       end
     else
       databanks = DataBank.pluck(:id, :name)
-      list = databanks.map{|d| t('.databank.list_line_html', id: d.first, name: d.second) }.join("\n")
+      list = databanks.map { |d| t('.databank.list_line_html', id: d.first, name: d.second) }.join("\n")
       active = @chat.data_bank_ids.present? ? @chat.data_bank_ids.to_sentence : t('false')
       reply_text = t('.databank.list_html', list: list, active: active)
     end
