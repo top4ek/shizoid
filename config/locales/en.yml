@@ -54,6 +54,14 @@ en:
       - Huh?
       - "I'm here!"
       - "Ping yourself!"
+    databank:
+      list_html: |
+        <b>Active databanks:</b>
+        %{active}
+
+        <b>Available databanks:</b>
+        %{list}
+      list_line_html: <b>%{id}</b>. %{name}
     locale:
       current: English botlover, do you speak it? (en)
       reply: |
@@ -70,8 +78,8 @@ en:
         *Autoeightball:* %{auto_eightball}
         *Winner:* %{winner}
     winner:
-      unknown: Das partizanen О_о
       user:
+        unknown: Das partizanen О_о
         none:
           - Oh, your'e not lucky.
           - Never was.
