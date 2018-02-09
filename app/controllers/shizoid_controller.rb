@@ -21,7 +21,7 @@ class ShizoidController < Telegram::Bot::UpdatesController
 
   def start(*args)
     return respond_with :message, text: nok unless admin?
-    @chat.update(active: true)
+    @chat.enable!
     respond_with :message, text: ok
   end
 
@@ -35,6 +35,7 @@ class ShizoidController < Telegram::Bot::UpdatesController
     rescue
       NewRelic::Agent.notice_error('Forbidden', custom_params: { chat: @chat.id })
     end
+    @chat.disable!
     ChatDestroyer.perform_async(@chat.id)
   end
 
@@ -114,7 +115,7 @@ class ShizoidController < Telegram::Bot::UpdatesController
   end
 
   def learn
-    if @chat.active? && !payload.from.is_bot && !command? && !(@chat.eightball? && question?)
+    if @chat.enabled? && !payload.from.is_bot && !command? && !(@chat.eightball? && question?)
       if text? && @words.size > 1
         options = { id: @chat.id, words: @words }
         PairUpdater.perform_async(options)

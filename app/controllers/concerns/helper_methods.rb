@@ -40,7 +40,7 @@ module HelperMethods
   end
 
   def can_reply?
-    admin? || @chat.active?
+    admin? || @chat.enabled?
   end
 
   def question?

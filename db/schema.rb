@@ -10,14 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171104065321) do
+ActiveRecord::Schema.define(version: 20180203063658) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "chats", force: :cascade do |t|
     t.integer "kind", limit: 2, null: false
-    t.boolean "active", default: false, null: false
     t.integer "random", limit: 2, default: 0, null: false
     t.boolean "bayan", default: false, null: false
     t.boolean "eightball", default: false, null: false
@@ -30,6 +29,8 @@ ActiveRecord::Schema.define(version: 20171104065321) do
     t.string "username"
     t.bigint "telegram_id", null: false
     t.jsonb "data_bank_ids", default: [], null: false
+    t.datetime "created_at", default: "2018-02-09 17:37:12", null: false
+    t.datetime "active_at"
     t.index ["telegram_id"], name: "index_chats_on_telegram_id", unique: true
   end
 
