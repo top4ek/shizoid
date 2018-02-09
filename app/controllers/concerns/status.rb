@@ -3,7 +3,7 @@ module Status
     return unless can_reply?
     respond_with :message, parse_mode: :markdown,
                            text: t('.reply',
-                                   active: t(@chat.active?.to_s),
+                                   active: t(@chat.enabled?.to_s),
                                    gab: @chat.random,
                                    pairs: @chat.pairs.size,
                                    databanks: t(@chat.data_bank_ids.present?.to_s),

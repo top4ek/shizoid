@@ -15,6 +15,22 @@ class Chat < ApplicationRecord
     "<a href='tg://user?id=#{telegram_id}'>#{to_s}</a>"
   end
 
+  def enabled?
+    !disabled?
+  end
+
+  def disabled?
+    active_at.nil?
+  end
+
+  def enable!
+    update(active_at: Time.now)
+  end
+
+  def disable!
+    update(active_at: nil)
+  end
+
   def random_answer?(additional = 0)
     rand(100) < (random + additional)
   end
@@ -62,12 +78,14 @@ class Chat < ApplicationRecord
     chat
   end
 
-  def update_meta(title:, first_name:, last_name:, username:, kind:)
-      self.title      = title                        if self.title != title
-      self.first_name = first_name                   if self.first_name != first_name
-      self.last_name  = last_name                    if self.last_name != last_name
-      self.username   = username                     if self.username != username
-      self.kind       = self.class.adopt_type(kind)  if self.kind != self.class.adopt_type(kind)
+  def update_meta(title:, first_name:, last_name:, username:, kind:, members_count: nil)
+      self.title          = title                        if self.title != title
+      self.first_name     = first_name                   if self.first_name != first_name
+      self.last_name      = last_name                    if self.last_name != last_name
+      self.username       = username                     if self.username != username
+      self.kind           = self.class.adopt_type(kind)  if self.kind != self.class.adopt_type(kind)
+      self.members_count  = members_count                if members_count.present? && self.members_count != members_count
+      self.active_at      = DateTime.now                 if enabled?
       self.save
   end
 

@@ -4,6 +4,6 @@ class ChatDestroyer
 
   def perform(id)
     chat = Chat.find_by(id: id)
-    chat.destroy unless chat.nil?
+    chat.disable! if chat.present?
   end
 end
