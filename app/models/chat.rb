@@ -6,6 +6,7 @@ class Chat < ApplicationRecord
   has_many :urls
 
   scope :inactive, -> { where(active_at: nil) }
+  scope :not_personal, -> { where.not(kind: :personal) }
 
   enum kind: %i[personal faction supergroup channel]
 
@@ -63,7 +64,7 @@ class Chat < ApplicationRecord
     return if personal?
     bot = Telegram::Bot::Client.new(Rails.application.secrets.telegram[:bot][:token])
     begin
-      bot.async(false) { bot.leave_chat(chat_id: id) }
+      bot.async(false) { bot.leave_chat(chat_id: telegram_id) }
     rescue
       NewRelic::Agent.notice_error('UnableToLeave', custom_params: { chat: id })
     end
