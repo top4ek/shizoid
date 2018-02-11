@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180203063658) do
+ActiveRecord::Schema.define(version: 20180211095834) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -29,7 +29,7 @@ ActiveRecord::Schema.define(version: 20180203063658) do
     t.string "username"
     t.bigint "telegram_id", null: false
     t.jsonb "data_bank_ids", default: [], null: false
-    t.datetime "created_at", default: "2018-02-09 17:37:12", null: false
+    t.datetime "created_at", null: false
     t.datetime "active_at"
     t.index ["telegram_id"], name: "index_chats_on_telegram_id", unique: true
   end

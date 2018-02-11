@@ -5,6 +5,8 @@ class Chat < ApplicationRecord
   has_many :winners, dependent: :destroy
   has_many :urls
 
+  scope :inactive, -> { where(active_at: nil) }
+
   enum kind: %i[personal faction supergroup channel]
 
   def to_s
@@ -53,6 +55,17 @@ class Chat < ApplicationRecord
     Shizoid::Redis.connection.multi do |r|
       r.del(redis_context_path)
       r.lpush(redis_context_path, current.first(size))
+    end
+  end
+
+  def leave!
+    disable!
+    return if personal?
+    bot = Telegram::Bot::Client.new(Rails.application.secrets.telegram[:bot][:token])
+    begin
+      bot.async(false) { bot.leave_chat(chat_id: id) }
+    rescue
+      NewRelic::Agent.notice_error('UnableToLeave', custom_params: { chat: id })
     end
   end
 
