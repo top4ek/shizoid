@@ -6,6 +6,7 @@ class Chat < ApplicationRecord
   has_many :urls
 
   scope :inactive, -> { where(active_at: nil) }
+  scope :active, -> { where.not(active_at: nil) }
   scope :not_personal, -> { where.not(kind: :personal) }
 
   enum kind: %i[personal faction supergroup channel]

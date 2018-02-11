@@ -130,6 +130,11 @@ en:
     gab:
       level: Wanderings at *%{chance}%*.
       error: Naaah, set 0-50%.
+  tasks:
+    clear_inactive:
+      anybody_here:
+        - Anybody here?
+        - I see tumbleweed!
   support:
     array:
       words_connector: ', '
