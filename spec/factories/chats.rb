@@ -2,7 +2,7 @@ FactoryBot.define do
   factory :chat do
     telegram_id { rand(1000000) }
     kind        0
-    active      false
+    active_at   nil
     random      0
     bayan       false
     eightball   false
@@ -15,7 +15,7 @@ FactoryBot.define do
     username    FFaker::Internet.user_name
 
     trait :disabled do
-      active false
+      active_at nil
     end
 
     trait :private do

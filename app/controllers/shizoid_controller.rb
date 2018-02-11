@@ -96,7 +96,7 @@ class ShizoidController < Telegram::Bot::UpdatesController
 
   def fetch_data
     @chat = Chat.learn payload
-    @chat.update(active: false) if payload&.left_chat_member&.id == bot_id
+    @chat.disable! if payload&.left_chat_member&.id == bot_id
     I18n.locale = @chat.locale
     return unless text?
     text = payload.text.downcase.dup

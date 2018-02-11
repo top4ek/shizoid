@@ -26,7 +26,7 @@ namespace :import do
       new_chat.first_name = first_name
       new_chat.last_name = last_name
       new_chat.username = username
-      new_chat.active = false
+      new_chat.active_at = nil
       new_chat.random = random.to_i
       new_chat.kind = type.to_i
       new_chat.save
