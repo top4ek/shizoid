@@ -8,5 +8,4 @@
         notifempty
         delaycompress
         compress
-        endscript
 }
