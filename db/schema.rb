@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180211095834) do
+ActiveRecord::Schema.define(version: 20180320152158) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -53,6 +53,16 @@ ActiveRecord::Schema.define(version: 20180211095834) do
     t.index ["first_id", "second_id", "chat_id", "data_bank_id"], name: "pairs_index", unique: true
     t.index ["first_id"], name: "index_pairs_on_first_id"
     t.index ["second_id"], name: "index_pairs_on_second_id"
+  end
+
+  create_table "participations", force: :cascade do |t|
+    t.bigint "chat_id", null: false
+    t.bigint "participant_id", null: false
+    t.boolean "present", default: true, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["chat_id"], name: "index_participations_on_chat_id"
+    t.index ["participant_id"], name: "index_participations_on_participant_id"
   end
 
   create_table "replies", force: :cascade do |t|

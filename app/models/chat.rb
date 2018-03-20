@@ -1,5 +1,8 @@
 class Chat < ApplicationRecord
   has_many :pairs, dependent: :destroy
+  has_many :participations
+  has_many :participants, through: :participations
+
   # has_many :greetings, dependent: :destroy
   has_many :singles, dependent: :destroy
   has_many :winners, dependent: :destroy
@@ -89,18 +92,19 @@ class Chat < ApplicationRecord
       options = { id: user.id, title: nil, kind: 'private', first_name: payload.from.first_name,
                   last_name: payload.from.last_name, username: payload.from.username }
       ChatUpdater.perform_async(options)
+      options = { chat_id: chat.telegram_id, user_id: user.telegram_id, left_id: payload&.left_chat_member&.id }
+      ParticipantUpdater.perform_async(options)
     end
     chat
   end
 
-  def update_meta(title:, first_name:, last_name:, username:, kind:, members_count: nil)
-      self.title          = title                        if self.title != title
-      self.first_name     = first_name                   if self.first_name != first_name
-      self.last_name      = last_name                    if self.last_name != last_name
-      self.username       = username                     if self.username != username
-      self.kind           = self.class.adopt_type(kind)  if self.kind != self.class.adopt_type(kind)
-      self.members_count  = members_count                if members_count.present? && self.members_count != members_count
-      self.active_at      = DateTime.now                 if enabled?
+  def update_meta(title:, first_name:, last_name:, username:, kind:)
+      self.title      = title                       if self.title != title
+      self.first_name = first_name                  if self.first_name != first_name
+      self.last_name  = last_name                   if self.last_name != last_name
+      self.username   = username                    if self.username != username
+      self.kind       = self.class.adopt_type(kind) if self.kind != self.class.adopt_type(kind)
+      self.active_at  = DateTime.now                if enabled?
       self.save
   end
 
