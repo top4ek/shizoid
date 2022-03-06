@@ -1,64 +1,36 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe Word, type: :model do
-  let(:word) { FactoryBot.create :word }
-  let(:words) { FFaker::Lorem.paragraph.split(' ').uniq }
+  let(:word)        { create :word }
+  let(:words)       { create_list :word, 10 }
+  let(:new_words)   { FFaker::LoremRU.words }
+  let(:known_words) { words.pluck(:word) }
+  let(:known_ids)   { words.pluck(:id) }
 
   it 'has valid factory' do
     expect(word).to be_valid
   end
 
-  before :each do
-    Word.learn(words)
+  it '::to_words' do
+    result = described_class.to_words(known_ids)
+    expect(result).to eq known_words
   end
 
-  describe '#learn' do
-    it "doesn't learns if no words specified" do
-      expect(Word.learn(nil)).to eq nil
-      expect(Word.learn([])).to eq nil
-      expect(Word.learn([nil, nil])).to eq nil
-      expect(Word.all.count).to eq words.count
-    end
+  it '::to_ids' do
+    result = described_class.to_ids(known_words)
+    expect(result).to eq known_ids
+  end
 
+  describe '::learn' do
     it 'learns new words' do
-      expect(Word.all.size).to eq words.count
+      expect { described_class.learn new_words }.to change(Word, :count).by new_words.size
     end
 
-    it "doesn't learns old words" do
-      3.times { Word.learn(words) }
-      expect(Word.all.count).to eq words.count
-    end
-  end
-
-  describe '#to_ids' do
-    it 'returns ids' do
-      words_relations = Word.where(word: words).pluck(:word, :id).to_h
-      result = words.map { |word| words_relations[word] }
-      expect(result).to eq Word.to_ids(words)
-    end
-
-    it 'returns nulls' do
-      words << nil
-      words.unshift nil
-      result = Word.to_ids(words).select{|w| w.nil? }.count
-      expect(result).to eq 2
-    end
-  end
-
-  describe '#to_words' do
-    it 'returns words' do
-      ids = Word.to_ids(words)
-      words_relations = Word.where(id: ids).pluck(:id, :word).to_h
-      result = ids.map { |id| words_relations[id] }
-      expect(result).to eq Word.to_words(ids)
-    end
-
-    it 'returns nulls' do
-      words << nil
-      words.unshift nil
-      ids = Word.to_ids(words)
-      result = Word.to_words(ids).select{|w| w.nil? }.count
-      expect(result).to eq 2
+    it "doesn't add already known words" do
+      described_class.learn new_words
+      expect { described_class.learn new_words }.not_to change(Word, :count)
     end
   end
 end

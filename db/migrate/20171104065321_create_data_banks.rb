@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateDataBanks < ActiveRecord::Migration[5.1]
   def change
     create_table :data_banks do |t|

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :databank do
   task :delete, [:id] => :environment do |t, args|
     if args.count.zero?

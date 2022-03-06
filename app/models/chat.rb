@@ -1,25 +1,38 @@
-class Chat < ApplicationRecord
-  has_many :pairs, dependent: :destroy
-  has_many :participations
-  has_many :participants, through: :participations
+# frozen_string_literal: true
 
-  # has_many :greetings, dependent: :destroy
-  has_many :singles, dependent: :destroy
+class Chat < ApplicationRecord
+  has_many :participations, dependent: :destroy
+  has_many :pairs, dependent: :destroy
+  has_many :users, through: :participations
   has_many :winners, dependent: :destroy
-  has_many :urls
 
   scope :inactive, -> { where(active_at: nil) }
   scope :active, -> { where.not(active_at: nil) }
-  scope :not_personal, -> { where.not(kind: :personal) }
+  scope :not_personal, -> { where.not(kind: 'private') }
+  scope :with_winners, -> { where.not(winner: nil) }
 
-  enum kind: %i[personal faction supergroup channel]
+  enum covid_region: CovidStat.regions
 
-  def to_s
-    "#{(username || first_name || last_name || title)}"
+  def winner_enabled?
+    winner.present?
   end
 
-  def to_link
-    "<a href='tg://user?id=#{telegram_id}'>#{to_s}</a>"
+  def winner_disabled?
+    !winner_enabled?
+  end
+
+  def current_winner
+    winners.find_by(created_at: Time.zone.today)
+  end
+
+  def choose_winner!
+    scores = participations.scored.order(score: :desc)
+    winner = scores.limit(3).sample&.user
+    return nil if winner.blank?
+
+    winners.create(user: winner)
+    scores.each { |p| p.update!(score: 0) }
+    winner
   end
 
   def enabled?
@@ -31,97 +44,51 @@ class Chat < ApplicationRecord
   end
 
   def enable!
-    update(active_at: Time.now)
+    update!(active_at: Time.current)
   end
 
   def disable!
-    update(active_at: nil)
+    update!(active_at: nil)
   end
 
-  def random_answer?(additional = 0)
-    rand(100) < (random + additional)
-  end
-
-  def generate_story
-    Pair.generate_story(self)
-  end
-
-  def generate(words)
-    Pair.generate(chat: self, words: words)
-  end
-
-  def context(ids = nil)
-    size = Rails.application.secrets.context_size
-    current = Shizoid::Redis.connection.lrange(redis_context_path, 0, size).map(&:to_i)
-    return current.shuffle if ids.nil?
-    uniq_ids = ids.uniq
-    current -= uniq_ids
-    current.unshift(*uniq_ids)
-    Shizoid::Redis.connection.multi do |r|
-      r.del(redis_context_path)
-      r.lpush(redis_context_path, current.first(size))
-    end
-  end
-
-  def leave!
-    disable!
-    return if personal?
-    bot = Telegram::Bot::Client.new(Rails.application.secrets.telegram[:bot][:token])
-    begin
-      bot.async(false) { bot.leave_chat(chat_id: telegram_id) }
-    rescue
-      NewRelic::Agent.notice_error('UnableToLeave', custom_params: { chat: id })
-    end
-  end
-
-  def self.names(ids)
-    Chat.where(telegram_id: ids).map { |n| [n.telegram_id, n.to_s] }.to_h
-  end
-
-  def self.learn(payload)
-    chat = Chat.find_by(telegram_id: payload.chat.id) || Chat.new(telegram_id: payload.chat.id,
-                                                                  kind: adopt_type(payload.chat.type))
-    chat.telegram_id = payload.migrate_to_chat_id unless payload.migrate_to_chat_id.nil?
-    chat.save
-    options = { id: chat.id, title: payload.chat.title, first_name: payload.chat.first_name,
-                last_name: payload.chat.last_name, username: payload.chat.username, kind: payload.chat.type }
-    ChatUpdater.perform_async(options)
-
-    if payload.from.present? && payload.chat.id != payload.from.id
-      user = Chat.find_by(telegram_id: payload.from.id) || Chat.create(telegram_id: payload.from.id, kind: :personal)
-      options = { id: user.id, title: nil, kind: 'private', first_name: payload.from.first_name,
-                  last_name: payload.from.last_name, username: payload.from.username }
-      ChatUpdater.perform_async(options)
-      options = { chat_id: chat.telegram_id, user_id: user.telegram_id, left_id: payload&.left_chat_member&.id }
-      ParticipantUpdater.perform_async(options)
-    end
+  def self.learn(message)
+    chat_payload = message.chat
+    chat = Chat.find_or_initialize_by(telegram_id: chat_payload.id)
+    chat.telegram_id = message.migrate_to_chat_id if message.migrate_to_chat_id.present?
+    chat.kind = chat_payload.type
+    chat.update(chat_payload.to_h.slice(:title, :username, :first_name, :last_name))
     chat
   end
 
-  def update_meta(title:, first_name:, last_name:, username:, kind:)
-      self.title      = title                       if self.title != title
-      self.first_name = first_name                  if self.first_name != first_name
-      self.last_name  = last_name                   if self.last_name != last_name
-      self.username   = username                    if self.username != username
-      self.kind       = self.class.adopt_type(kind) if self.kind != self.class.adopt_type(kind)
-      self.active_at  = DateTime.now                if enabled?
-      self.save
+  def answer_randomly?(additional = 0)
+    rand(100) < (random + additional)
+  end
+
+  def generate_reply(words)
+    Pair.build_sentence(chat: self, words: words) || Pair.build_sentence(chat: self, words_ids: context)
+  end
+
+  def generate_story
+    context.collect { Pair.build_sentence(chat: self, words_ids: context) }.uniq.join('. ')
+  end
+
+  def context(ids = nil)
+    size = Rails.configuration.secrets[:context_size]
+    current = RedisService.lrange(redis_context_path, 0, size).map(&:to_i)
+    return current.shuffle if ids.nil?
+
+    uniq_ids = ids.uniq
+    current -= uniq_ids
+    current.unshift(*uniq_ids)
+    RedisService.multi do |r|
+      r.del(redis_context_path)
+      r.lpush(redis_context_path, current.first(size))
+    end
   end
 
   private
 
   def redis_context_path
     "chat_context/#{id}"
-  end
-
-  def self.adopt_type(type)
-    case type
-    when 'private'
-      :personal
-    when 'group'
-      :faction
-    else
-      type.to_sym
-    end
   end
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class PersistChatIDs < ActiveRecord::Migration[5.1]
   def up
     add_column :chats, :telegram_id, :integer, null: true, limit: 8, unique: true

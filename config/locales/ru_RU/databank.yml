@@ -1,0 +1,8 @@
+ru_RU:
+  databank:
+    list_html: |
+      <b>Активные банки данных:</b>
+      %{active}
+      <b>Доступные банки данных:</b>
+      %{list}
+    list_line_html: <b>%{id}</b>. %{name}

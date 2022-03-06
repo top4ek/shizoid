@@ -1,0 +1,7 @@
+FROM alpine:latest
+
+EXPOSE 9150
+
+RUN apk --no-cache add tor
+
+CMD ["tor"]

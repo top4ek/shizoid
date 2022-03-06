@@ -1,0 +1,7 @@
+check_new_data:
+  cron: "*/23 * * * *"
+  class: "CovidUpdaterWorker"
+
+send_new_data:
+  cron: "*/5 * * * *"
+  class: "CovidSenderWorker"

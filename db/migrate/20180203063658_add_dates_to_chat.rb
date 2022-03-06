@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddDatesToChat < ActiveRecord::Migration[5.1]
   def up
     add_column :chats, :created_at, :datetime, null: false, default: Time.now
