@@ -1,8 +1,37 @@
+inherit_from: .rubocop_todo.yml
+
+require:
+  - rubocop-performance
+  - rubocop-rspec
+  - rubocop-rails
+
 AllCops:
-  TargetRubyVersion: 2.5
+  TargetRubyVersion: 3.1
+  Exclude:
+    - db/schema.rb
+    - bin/*
+
+Documentation:
+  Enabled: false
 
 Metrics/LineLength:
-  Max: 120
+  Max: 130
 
-Metrics/MethodLength:
+Metrics/BlockLength:
   Max: 50
+  ExcludedMethods:
+    - describe
+    - context
+    - path
+    - get
+    - patch
+    - put
+    - post
+    - delete
+
+Style/NumericPredicate:
+  Exclude:
+    - spec/**/*
+
+Metrics/AbcSize:
+  Max: 30

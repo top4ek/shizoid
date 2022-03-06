@@ -2,21 +2,19 @@
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
 #
-# Note that this schema.rb definition is the authoritative source for your
-# database schema. If you need to create the application database on another
-# system, you should be using db:schema:load, not running all the migrations
-# from scratch. The latter is a flawed and unsustainable approach (the more migrations
-# you'll amass, the slower it'll run and the greater likelihood for issues).
+# This file is the source Rails uses to define your schema when running `bin/rails
+# db:schema:load`. When creating a new database, `bin/rails db:schema:load` tends to
+# be faster and is potentially less error prone than running all of your
+# migrations from scratch. Old migrations may fail to apply correctly if those
+# migrations use external dependencies or application code.
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180320152158) do
-
+ActiveRecord::Schema[7.0].define(version: 2021_11_02_185358) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "chats", force: :cascade do |t|
-    t.integer "kind", limit: 2, null: false
     t.integer "random", limit: 2, default: 0, null: false
     t.boolean "bayan", default: false, null: false
     t.boolean "eightball", default: false, null: false
@@ -29,9 +27,26 @@ ActiveRecord::Schema.define(version: 20180320152158) do
     t.string "username"
     t.bigint "telegram_id", null: false
     t.jsonb "data_bank_ids", default: [], null: false
-    t.datetime "created_at", null: false
-    t.datetime "active_at"
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "active_at", precision: nil
+    t.string "kind", limit: 32
+    t.integer "covid_region"
+    t.date "covid_last_notification"
+    t.date "date"
     t.index ["telegram_id"], name: "index_chats_on_telegram_id", unique: true
+  end
+
+  create_table "covid_stats", force: :cascade do |t|
+    t.integer "region", null: false
+    t.date "date", null: false
+    t.integer "sick"
+    t.integer "healed"
+    t.integer "died"
+    t.integer "first"
+    t.integer "second"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["date", "region"], name: "index_covid_stats_on_date_and_region", unique: true
   end
 
   create_table "data_banks", force: :cascade do |t|
@@ -57,12 +72,16 @@ ActiveRecord::Schema.define(version: 20180320152158) do
 
   create_table "participations", force: :cascade do |t|
     t.bigint "chat_id", null: false
-    t.bigint "participant_id", null: false
-    t.boolean "present", default: true, null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.boolean "left", default: false, null: false
+    t.datetime "active_at", precision: nil
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
+    t.integer "experience", default: 0, null: false
+    t.integer "score", default: 0, null: false
+    t.index ["chat_id", "user_id"], name: "index_participations_on_chat_id_and_user_id", unique: true
     t.index ["chat_id"], name: "index_participations_on_chat_id"
-    t.index ["participant_id"], name: "index_participations_on_participant_id"
+    t.index ["user_id"], name: "index_participations_on_user_id"
   end
 
   create_table "replies", force: :cascade do |t|
@@ -73,26 +92,22 @@ ActiveRecord::Schema.define(version: 20180320152158) do
     t.index ["word_id"], name: "index_replies_on_word_id"
   end
 
-  create_table "singles", force: :cascade do |t|
-    t.bigint "chat_id", null: false
-    t.bigint "word_id", null: false
-    t.integer "reply_type", limit: 2
-    t.string "reply", null: false
-    t.bigint "count", default: 0, null: false
-    t.index ["chat_id"], name: "index_singles_on_chat_id"
-    t.index ["word_id", "chat_id", "reply_type", "reply"], name: "index_singles_on_word_id_and_chat_id_and_reply_type_and_reply", unique: true
-    t.index ["word_id"], name: "index_singles_on_word_id"
-  end
-
-  create_table "urls", force: :cascade do |t|
-    t.string "url", null: false
-    t.index ["url"], name: "index_urls_on_url", unique: true
+  create_table "users", force: :cascade do |t|
+    t.boolean "is_bot"
+    t.string "first_name"
+    t.string "last_name"
+    t.string "username"
+    t.string "language_code"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "winners", force: :cascade do |t|
     t.bigint "chat_id", null: false
     t.bigint "user_id", null: false
     t.date "created_at", null: false
+    t.date "date", null: false
+    t.index ["chat_id", "date"], name: "index_winners_on_chat_id_and_date", unique: true
     t.index ["chat_id"], name: "index_winners_on_chat_id"
     t.index ["created_at"], name: "index_winners_on_created_at"
     t.index ["user_id"], name: "index_winners_on_user_id"
@@ -100,7 +115,7 @@ ActiveRecord::Schema.define(version: 20180320152158) do
 
   create_table "words", force: :cascade do |t|
     t.string "word", null: false
-    t.index ["word"], name: "index_words_on_word"
+    t.index ["word"], name: "index_words_on_word", opclass: :varchar_pattern_ops
   end
 
 end

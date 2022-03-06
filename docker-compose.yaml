@@ -1,0 +1,86 @@
+version: '3.7'
+services:
+  sidekiq: &sidekiq
+    tty: true
+    stdin_open: true
+    env_file: .env
+    build:
+      context: .
+      args:
+        CONTAINER_GID: '${CONTAINER_GID:-1000}'
+        CONTAINER_UID: '${CONTAINER_UID:-1000}'
+    restart: unless-stopped
+    user: $CONTAINER_UID:$CONTAINER_GID
+    volumes:
+      - ./:/opt/app/src/
+    command: bundle exec sidekiq -C config/sidekiq.yml
+    depends_on:
+      - postgres
+      - redis
+
+  app:
+    <<: *sidekiq
+    command: ./start.sh
+    environment:
+      DISABLE_DATABASE_ENVIRONMENT_CHECK: 1
+    ports:
+      - 3000:3000
+    healthcheck:
+      test: ["CMD", "curl", "-f", "-o", "/dev/null", "http://127.0.0.1:3000/ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 5s
+
+  guard:
+    <<: *sidekiq
+    env_file: .env.test
+    environment:
+      RAILS_ENV: test
+    command: sh -c "bundle exec rails db:migrate && bundle exec guard start --no-bundler-warning"
+
+  redis:
+    image: redis:6-alpine
+    restart: unless-stopped
+    ports:
+      - 6379:6379
+    healthcheck:
+      test: redis-cli ping
+      interval: 10s
+      timeout: 3s
+      retries: 30
+
+  postgres:
+    image: postgres:14-alpine
+    env_file: .env.test
+    environment:
+      POSTGRES_USER: ${DATABASE_USERNAME}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_DB: ${DATABASE_NAME}
+    ports:
+      - 5432:5432
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DATABASE_USERNAME}"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+
+  # receiver:
+  #   build:
+  #     context: ./receiver
+  #     target: dev
+  #     dockerfile: ./../config/deploy/Dockerfile.receiver
+  #   volumes:
+  #     - ./receiver:/opt/app
+  #   ports:
+  #   - 8181:8080
+    # - 2345:2345
+
+    # tor:
+  #   build:
+  #     context: config/deploy/
+  #     dockerfile: Dockerfile.tor
+  #     args:
+  #       CONTAINER_GID: '${CONTAINER_GID:-1000}'
+  #       CONTAINER_UID: '${CONTAINER_UID:-1000}'
+  #   restart: unless-stopped

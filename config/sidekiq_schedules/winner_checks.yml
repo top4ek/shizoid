@@ -1,0 +1,3 @@
+winner_check:
+  cron: "20 1 * * *"
+  class: "WinnerCheckWorker"

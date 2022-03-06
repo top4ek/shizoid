@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RemoveOneWorldSentences < ActiveRecord::Migration[5.1]
   def change
     Reply.joins(:pair).where(word_id: nil, pairs: { first_id: nil }).destroy_all

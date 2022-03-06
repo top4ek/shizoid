@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class DataBank < ApplicationRecord
   has_many :pairs, dependent: :destroy
 

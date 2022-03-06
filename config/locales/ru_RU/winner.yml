@@ -1,0 +1,15 @@
+ru_RU:
+  winner:
+    top_line_html: "<b>%{position}.</b> %{user} — %{score}"
+    current_html: |
+      <b>Текущая статистика:</b>
+
+      %{top}
+    winner_html: |
+      <i>%{name}</i> дня — %{user}
+
+      <b>Топ 10 за год:</b>
+      %{top}
+    no_one: 'Пока никого :('
+    disabled: Выключен
+    default: Флудер

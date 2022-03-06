@@ -1,0 +1,11 @@
+ru_RU:
+  status: |
+    *Активен:* %{active}
+    *Неудержимость:* %{gab}%
+    *Пар в БД:* %{pairs}
+    *Банки данных:* %{databanks}
+    *Количество сообщений:* %{message_count}
+    *Автошарик:* %{auto_eightball}
+    *Победитель:* %{winner}
+
+    *Версия:* %{version}

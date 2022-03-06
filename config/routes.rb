@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
 Rails.application.routes.draw do
-  telegram_webhook ShizoidController
+  get :ping, to: 'webhooks#ping'
+  post '/:id', to: 'webhooks#update'
 end

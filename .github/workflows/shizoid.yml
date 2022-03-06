@@ -1,0 +1,79 @@
+name: Shizoid
+on:
+  - push
+  - pull_request
+
+jobs:
+  rspec:
+    name: Perform specs
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:alpine
+        env:
+          POSTGRES_USER: shizoid
+          POSTGRES_PASSWORD: WoZ7w2e3
+          POSTGRES_DB: shizoid_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+      redis:
+        image: redis:alpine
+        ports:
+          - 6379:6379
+        options: --entrypoint redis-server
+    steps:
+      - name: 'Checkout repository'
+        uses: actions/checkout@v2
+      - name: 'Setup Ruby'
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.0
+      - name: "Install required system packages"
+        run: sudo apt-get update -y && sudo apt-get install openssh-client rsync libpq-dev cmake -y
+      - name: "Bundle install"
+        run: |
+          gem install bundler && bundle update --bundler && bundle -v
+          bundle config path vendor/bundle
+          bundle install --jobs 4 --retry 3
+      - name: "Rails test"
+        run: |
+          export $(grep -v '#' .env.test | grep '=' | xargs)
+          export DATABASE_HOST=127.0.0.1
+          export REDIS_HOST=127.0.0.1
+          bundle exec rails db:setup --trace
+          bundle exec rails test
+          bundle exec rspec
+          bundle exec rails zeitwerk:check
+
+  build:
+    name: Build and upload image
+    runs-on: ubuntu-latest
+    if: ${{ github.ref == 'refs/heads/master' }}
+    needs: rspec
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Save current version to file
+      run: git rev-parse --short HEAD > .version
+
+    - name: Buildah Action
+      id: build-image
+      uses: redhat-actions/buildah-build@v2
+      with:
+        image: shizoid
+        tags: latest ${{ github.sha }}
+        containerfiles: ./config/deploy/Containerfile
+
+    - name: Push to docker hub
+      uses: redhat-actions/push-to-registry@v2
+      with:
+        image: ${{ steps.build-image.outputs.image }}
+        tags: ${{ steps.build-image.outputs.tags }}
+        registry: docker.io/${{ secrets.DOCKER_USER }}
+        username: ${{ secrets.DOCKER_USER }}
+        password: ${{ secrets.DOCKER_TOKEN }}

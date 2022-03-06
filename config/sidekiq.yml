@@ -1,12 +1,11 @@
 ---
-:concurrency: 6
+:concurrency: <%= ENV.fetch('SIDEKIQ_CONCURRENCY') { 25 } %>
+:daemon: false
+:dynamic: true
 :queues:
   - default
-  - updating
   - learning
-  - deleting
+  - stats
 :limits:
-    default: 2
-    updating: 2
-    learning: 1
-    deleting: 1
+  learning: 1
+  stats: 1
