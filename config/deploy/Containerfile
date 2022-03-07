@@ -9,3 +9,4 @@ RUN apk add --no-cache --update git build-base ca-certificates less postgresql-d
 
 ADD Gemfile Gemfile.lock /opt/app/src/
 RUN bundle config without production && bundle install --retry=3 --jobs 20
+COPY . /opt/app/src/
