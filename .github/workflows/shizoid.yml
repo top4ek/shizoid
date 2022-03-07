@@ -1,7 +1,6 @@
 name: Shizoid
 on:
   - push
-  - pull_request
 
 jobs:
   rspec:
