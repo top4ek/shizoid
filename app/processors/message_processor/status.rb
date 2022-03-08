@@ -22,7 +22,6 @@ module MessageProcessor
                         active: I18n.t(chat.enabled?.to_s),
                         gab: chat.random,
                         pairs: chat.pairs.size,
-                        message_count: message.message_id,
                         databanks: I18n.t(chat.data_bank_ids.present?.to_s),
                         auto_eightball: I18n.t(chat.eightball?.to_s),
                         winner: chat.winner || I18n.t('.winner.disabled'))

@@ -57,8 +57,7 @@ RSpec.describe MessageProcessor::Status, type: :processor do
                                    pairs: chat.pairs.size,
                                    databanks: I18n.t(chat.data_bank_ids.present?.to_s),
                                    auto_eightball: I18n.t(chat.eightball?.to_s),
-                                   winner: chat.winner || t('.winner.disabled'),
-                                   message_count: status.message_id)
+                                   winner: chat.winner || t('.winner.disabled'))
 
       expect(response).to eq result[:send_message][:text]
     end
