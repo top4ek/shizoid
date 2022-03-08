@@ -1,7 +1,7 @@
 GIT
-  remote: https://github.com/brainopia/sidekiq-limit_fetch.git
-  revision: bf9cee3b81e49ab8002bb9d564c2002d5b8a4b56
-  ref: bf9cee3b81e49ab8002bb9d564c2002d5b8a4b56
+  remote: https://github.com/top4ek/sidekiq-limit_fetch.git
+  revision: d7f934259a0d0b925f4395df5e897fa25b387817
+  ref: d7f934259a0d0b925f4395df5e897fa25b387817
   specs:
     sidekiq-limit_fetch (3.4.0)
       sidekiq (>= 4)

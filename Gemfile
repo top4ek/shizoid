@@ -15,7 +15,7 @@ gem 'sentry-ruby'
 gem 'sentry-sidekiq'
 gem 'sidekiq'
 gem 'sidekiq-cron'
-gem 'sidekiq-limit_fetch', github: 'brainopia/sidekiq-limit_fetch', ref: 'bf9cee3b81e49ab8002bb9d564c2002d5b8a4b56'
+gem 'sidekiq-limit_fetch', github: 'top4ek/sidekiq-limit_fetch', ref: 'd7f934259a0d0b925f4395df5e897fa25b387817'
 gem 'telegram-bot-ruby'
 
 group :development, :test do
