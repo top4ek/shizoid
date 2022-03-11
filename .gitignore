@@ -13,3 +13,4 @@ coverage
 db/backups
 receiver/tmp
 .env
+.stfolder
