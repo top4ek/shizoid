@@ -1,5 +1,5 @@
 
-FROM ruby:3.1.1-alpine3.15
+FROM ruby:3.1.2-alpine
 EXPOSE 3000
 WORKDIR /opt/app/src
 ENV LANG ru_RU.utf8
