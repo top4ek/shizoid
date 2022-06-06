@@ -19,7 +19,7 @@ FactoryBot.define do
     data_bank_ids   { [] }
     casbanhammer_at { nil }
 
-    trait :casbanhammer do
+    trait :casban_enabled do
       casbanhammer_at { 1.day.ago }
     end
 

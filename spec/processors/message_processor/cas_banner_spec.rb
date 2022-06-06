@@ -37,7 +37,8 @@ RSpec.describe MessageProcessor::CasBanner, type: :processor do
     it 'without text replies with some stats' do
       chat.users << create(:user, :casbanned)
       create(:user, :casbanned)
-      expect(result[:send_message][:text]).to eq "*Активен:* Нет\n*Всего:* 2%\n*В этом чате:* 1%\n"
+      expect(result[:send_message][:text]).to eq "*Активен:* Нет\n*Всего:* 2\n*В этом чате:* 1\n\nPowered by [CAS](https://cas.chat/)\n"
+      expect(result[:send_message][:parse_mode]).to eq :markdown
     end
   end
 
@@ -55,7 +56,7 @@ RSpec.describe MessageProcessor::CasBanner, type: :processor do
 
   describe 'disable' do
     let(:message) { build :tg_message, :command_cas_disable, message_params }
-    let(:chat)    { create :chat, :casbanhammer, :disabled_random }
+    let(:chat)    { create :chat, :casban_enabled, :disabled_random }
 
     it 'changes casbanhammer_at to nil' do
       chat

@@ -21,7 +21,7 @@ module MessageProcessor
 
       { send_message: { chat_id: chat.telegram_id,
                         reply_to_message_id: message.message_id,
-                        parse_mode: :html,
+                        parse_mode: :markdown,
                         text: response } }
     end
 
@@ -39,7 +39,7 @@ module MessageProcessor
 
     def show
       I18n.t('.cas_banner', active: I18n.t(chat.casbanhammer?.to_s),
-                            count: chat.participations.size,
+                            count: chat.participations.joins(:user).where.not(users: { casbanned_at: nil }).size,
                             overall: User.casbanned.size)
     end
 
