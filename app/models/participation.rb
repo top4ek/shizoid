@@ -18,7 +18,7 @@ class Participation < ApplicationRecord
   def learn(message)
     self.experience += rand(3) if active_at.nil? || 5.minutes.ago > active_at
     self.active_at = Time.current
-    self.left = message.left_chat_member&.id == user.id
+    self.left = message.left_chat_member&.id == user.id if message.left_chat_member&.id.present?
     save!
     self
   end
