@@ -65,22 +65,4 @@ RSpec.describe MessageProcessor::CasBanner, type: :processor do
       end.to change(chat, :casbanhammer_at).to(nil)
     end
   end
-
-  # it '#background_task calls learn worker' do
-  #   allow(PairUpdateWorker).to receive(:perform_async).with(chat.id, text.text)
-  #   described_class.new(text)
-  #   expect(PairUpdateWorker).to have_received(:perform_async)
-  # end
-
-  # describe 'sends message' do
-  #   subject(:payload) { result[:send_message] }
-
-  #   it 'to right chat' do
-  #     expect(payload[:chat_id]).to eq chat.telegram_id
-  #   end
-
-  #   it 'with regular mode' do
-  #     expect(payload[:parse_mode]).not_to be_present
-  #   end
-  # end
 end

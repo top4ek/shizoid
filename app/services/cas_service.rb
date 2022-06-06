@@ -14,7 +14,7 @@ module CasService
     private
 
     def url(telegram_id)
-      "https://api.cas.chat/check?user_id=#{telegram_id}"
+      "#{Rails.configuration.secrets[:cas_url]}/check?user_id=#{telegram_id}"
     end
   end
 end
