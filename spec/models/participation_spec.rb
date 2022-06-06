@@ -29,7 +29,7 @@ RSpec.describe Participation, type: :model do
 
       method_call
 
-      expect(SendPayloadWorker).to have_received(:perform_async)
+      expect(SendPayloadWorker).to have_received(:perform_async).exactly(Rails.application.secrets[:telegram][:owners].size).times
     end
   end
 
