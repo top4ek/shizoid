@@ -1,43 +1,23 @@
-FROM golang:1.17-alpine AS base
-WORKDIR /opt/app
+FROM golang:1.18-alpine AS builder
+WORKDIR /opt
 
-ENV GO111MODULE="on"
-ENV GOOS="linux"
-ENV CGO_ENABLED=0
+ENV GO111MODULE "on"
+ENV GOOS "linux"
+ENV GOARCH "amd64"
+ENV CGO_ENABLED 0
 
-RUN apk update && \
-    apk add --no-cache ca-certificates git && \
-    update-ca-certificates
+RUN apk --no-cache --update add ca-certificates curl git
 
-# Development
-FROM base AS dev
-WORKDIR /opt/app
-
-EXPOSE 8080
-# EXPOSE 2345
-
-RUN go get -u github.com/cosmtrek/air
-
-ENTRYPOINT ["/opt/app/_dev_start.sh"]
-
-# Production build
-FROM base AS builder
-WORKDIR /app
-
-COPY . /app
+COPY . /opt
 
 RUN go mod download && \
     go mod verify && \
-    go build -o receiver -a .
+    go build -o /opt/receiver
 
-# Production
-FROM alpine:latest
-EXPOSE 8080
+FROM scratch
+EXPOSE 3000
 
-RUN apk update && \
-    apk add --no-cache ca-certificates curl tzdata && \
-    update-ca-certificates
+COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
+COPY --from=builder /opt/receiver /
 
-COPY --from=builder /app/receiver /opt/receiver
-
-ENTRYPOINT ["/opt/receiver"]
+CMD ["/receiver"]

@@ -3,7 +3,7 @@
 module Processor
   attr_reader :message
 
-  delegate :text, :entities, to: :message
+  delegate :new_chat_members, :text, :entities, to: :message
 
   def initialize(message)
     @message = message

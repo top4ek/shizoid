@@ -23,7 +23,7 @@ module MessageProcessor
                         gab: chat.random,
                         pairs: chat.pairs.size,
                         databanks: I18n.t(chat.data_bank_ids.present?.to_s),
-                        auto_eightball: I18n.t(chat.eightball?.to_s),
+                        cas_banner: I18n.t(chat.casbanhammer?.to_s),
                         winner: chat.winner || I18n.t('.winner.disabled'))
     end
   end

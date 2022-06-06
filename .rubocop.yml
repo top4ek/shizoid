@@ -33,5 +33,9 @@ Style/NumericPredicate:
   Exclude:
     - spec/**/*
 
+Style/HashSyntax:
+  Enabled: true
+  EnforcedStyle: ruby19
+
 Metrics/AbcSize:
   Max: 30

@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 module MessageProcessor
-  AVAILABLE_PROCESSORS = %w[Me
+  AVAILABLE_PROCESSORS = %w[CasBanner
+                            Me
                             Say
                             BinaryDice
                             CovidStats

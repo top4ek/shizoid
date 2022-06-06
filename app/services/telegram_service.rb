@@ -41,6 +41,6 @@ module TelegramService
       end
     end
 
-    delegate :send_message, :leave_chat, :delete_message, to: :bot_api
+    delegate :ban_chat_member, :send_message, :leave_chat, :delete_message, to: :bot_api
   end
 end
