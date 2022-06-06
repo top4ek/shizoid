@@ -2,6 +2,8 @@
 
 require 'sidekiq/api'
 
+Sidekiq.strict_args!
+
 Sidekiq.configure_server do |config|
   config.redis = Rails.configuration.secrets[:sidekiq_redis]
 

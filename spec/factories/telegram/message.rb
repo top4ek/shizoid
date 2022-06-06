@@ -191,5 +191,25 @@ FactoryBot.define do
       migrate_from_chat_id { chat.id }
       migrate_to_chat_id   { FFaker::Telegram.user_id }
     end
+
+    trait :new_chat_members do
+      new_chat_members { Array.new(2) { association :tg_user } }
+    end
+
+    trait :command_cas_enable do
+      text     { "/cas enable #{CovidStat.regions.keys.sample}" }
+      entities { [{ type: 'bot_command', offset: 0, length: 4 }] }
+    end
+
+    trait :command_cas_disable do
+      text     { '/cas disable' }
+      entities { [{ type: 'bot_command', offset: 0, length: 4 }] }
+    end
+
+    trait :command_cas do
+      text     { '/cas' }
+      entities { [{ type: 'bot_command', offset: 0, length: 4 }] }
+    end
+
   end
 end

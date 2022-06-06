@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2021_11_02_185358) do
+ActiveRecord::Schema[7.0].define(version: 2022_05_28_175808) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -33,6 +33,7 @@ ActiveRecord::Schema[7.0].define(version: 2021_11_02_185358) do
     t.integer "covid_region"
     t.date "covid_last_notification"
     t.date "date"
+    t.datetime "casbanhammer_at"
     t.index ["telegram_id"], name: "index_chats_on_telegram_id", unique: true
   end
 
@@ -100,6 +101,8 @@ ActiveRecord::Schema[7.0].define(version: 2021_11_02_185358) do
     t.string "language_code"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "casbanned_at", precision: nil
+    t.datetime "casbanchecked_at", precision: nil
   end
 
   create_table "winners", force: :cascade do |t|

@@ -7,7 +7,7 @@ class UpdateProcessor
 
     data = Telegram::Bot::Types::Message.new message
     chat = Chat.learn(data)
-    User.learn(data)
+    User.learn(data.from)
     Participation.learn(data)
 
     queue_name = "chat_#{chat.id}"

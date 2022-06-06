@@ -51,6 +51,10 @@ class Chat < ApplicationRecord
     update!(active_at: nil)
   end
 
+  def casbanhammer?
+    casbanhammer_at.present?
+  end
+
   def self.learn(message)
     chat_payload = message.chat
     chat = Chat.find_or_initialize_by(telegram_id: chat_payload.id)

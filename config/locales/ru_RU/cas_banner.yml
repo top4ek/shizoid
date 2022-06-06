@@ -1,0 +1,5 @@
+ru_RU:
+  cas_banner: |
+    *Активен:* %{active}
+    *Всего:* %{overall}%
+    *В этом чате:* %{count}%

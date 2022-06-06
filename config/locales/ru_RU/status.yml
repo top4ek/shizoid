@@ -4,7 +4,7 @@ ru_RU:
     *Неудержимость:* %{gab}%
     *Пар в БД:* %{pairs}
     *Банки данных:* %{databanks}
-    *Автошарик:* %{auto_eightball}
+    *СAS-банхаммер:* %{cas_banner}
     *Победитель:* %{winner}
 
     *Версия:* %{version}
