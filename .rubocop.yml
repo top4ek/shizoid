@@ -6,7 +6,7 @@ require:
   - rubocop-rails
 
 AllCops:
-  TargetRubyVersion: 3.1
+  TargetRubyVersion: 3.3
   Exclude:
     - db/schema.rb
     - bin/*

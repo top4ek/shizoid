@@ -2,6 +2,7 @@
 !/tmp/.keep
 .byebug_history
 .idea
+.ruby-lsp
 .vagrant
 .version
 *.sublime-project
