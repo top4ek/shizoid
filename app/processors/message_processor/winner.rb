@@ -39,7 +39,7 @@ module MessageProcessor
                   I18n.t('winner.top_line_html', position: i + 1, user: p.user.to_s, score: p.score) if p.user.present?
                 end.compact.join("\n")
 
-      I18n.t('winner.current_html', top: top)
+      I18n.t('winner.current_html', top:)
     end
 
     def previous_winner
@@ -56,7 +56,7 @@ module MessageProcessor
                   .map { |(user, wins), idx| I18n.t('winner.top_line_html', position: idx + 1, user: user.to_s, score: wins) }
                   .join("\n")
 
-        I18n.t('winner.winner_html', top: top, name: chat.winner, user: winner)
+        I18n.t('winner.winner_html', top:, name: chat.winner, user: winner)
       else
         I18n.t('winner.no_one')
       end

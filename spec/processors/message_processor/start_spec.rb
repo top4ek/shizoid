@@ -26,10 +26,6 @@ RSpec.describe MessageProcessor::Start, type: :processor do
       expect(described_class.new(ping).responds?).to eq false
     end
 
-    it 'non /start command' do
-      expect(described_class.new(ping).responds?).to eq false
-    end
-
     it 'empty text' do
       expect(described_class.new(picture).responds?).to eq false
     end

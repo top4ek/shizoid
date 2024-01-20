@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe IdleCheckWorker, type: :worker do
   let(:chat)           { create :chat, active_at: Time.current }
   let(:inactive_chat)  { create :chat, active_at: 20.days.ago }
-  let(:participations) { create :participation, chat: chat }
+  let(:participations) { create :participation, chat: }
 
   it 'enqueues a worker' do
     expect { described_class.perform_async }

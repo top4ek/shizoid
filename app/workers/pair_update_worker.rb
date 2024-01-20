@@ -7,6 +7,6 @@ class PairUpdateWorker
   def perform(chat_id, text)
     chat = Chat.find(chat_id)
 
-    Pair.learn(chat: chat, words: text.split)
+    Pair.learn(chat:, words: text.split)
   end
 end

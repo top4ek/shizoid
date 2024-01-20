@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddScoreToParticipation < ActiveRecord::Migration[6.1]
   def change
     add_column :participations, :score, :integer, null: false, default: 0

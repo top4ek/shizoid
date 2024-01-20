@@ -13,9 +13,9 @@ RSpec.describe Pair, type: :model do
     expect(pair).to be_valid
   end
 
-  it { should belong_to(:first).optional }
-  it { should belong_to(:second).optional }
-  it { should have_many(:replies) }
+  it { is_expected.to belong_to(:first).optional }
+  it { is_expected.to belong_to(:second).optional }
+  it { is_expected.to have_many(:replies) }
 
   describe 'validates pair belonging' do
     let(:chat)      { create :chat }
@@ -28,41 +28,40 @@ RSpec.describe Pair, type: :model do
     end
 
     context 'with chat and data bank' do
-      subject(:result) { build :pair, chat: chat, data_bank: data_bank }
+      subject(:result) { build :pair, chat:, data_bank: }
 
-      it { expect(result).not_to be_valid}
+      it { expect(result).not_to be_valid }
     end
 
     context 'with chat' do
-      subject(:result) { build :pair, chat: chat, data_bank: nil }
+      subject(:result) { build :pair, chat:, data_bank: nil }
 
-      it { expect(result).to be_valid}
+      it { expect(result).to be_valid }
     end
 
     context 'with data bank' do
-      subject(:result) { build :pair, chat: nil, data_bank: data_bank }
+      subject(:result) { build :pair, chat: nil, data_bank: }
 
-      it { expect(result).to be_valid}
+      it { expect(result).to be_valid }
     end
   end
 
   describe '::build sentence' do
-    subject(:result) { described_class.build_sentence chat: chat, words: words }
+    subject(:result) { described_class.build_sentence chat:, words: }
 
     let(:chat)      { create :chat }
     let(:words)     { FFaker::Lorem.sentences.join(' ').split.uniq }
-    let(:sentences) { words.join(' ').split('.').map{ |s| "#{s.strip}." } }
+    let(:sentences) { words.join(' ').split('.').map { |s| "#{s.strip}." } }
 
-    before { described_class.learn(chat: chat, words: words) }
+    before { described_class.learn(chat:, words:) }
 
     it 'generates one of the old phrases' do
       expect(sentences).to include result
     end
   end
 
-
   describe '::learn' do
-    subject(:result) { described_class.learn(chat: chat, words: words) }
+    subject(:result) { described_class.learn(chat:, words:) }
 
     let(:chat)            { create :chat }
     let(:words)           { FFaker::Lorem.sentences.join(' ').split.uniq }
@@ -90,23 +89,22 @@ RSpec.describe Pair, type: :model do
     describe 'creates pairs' do
       it 'correct count' do
         predictable_count = words.size + sentences_count
-        expect { result }.to change(Pair, :count).by(predictable_count)
+        expect { result }.to change(described_class, :count).by(predictable_count)
       end
 
       it 'correct first words' do
         result
-        first_words = Pair.all.map { |p| p.first&.word }.compact
+        first_words = described_class.all.map { |p| p.first&.word }.compact
         expect(first_words).to eq words
       end
 
       it 'correct second words' do
         result
-        second_words = Pair.all.map { |p| p.second&.word }.compact
+        second_words = described_class.all.map { |p| p.second&.word }.compact
         expect(second_words).to eq words
       end
     end
   end
-
 
   # it '::to_words' do
   #   result = described_class.to_words(known_ids)

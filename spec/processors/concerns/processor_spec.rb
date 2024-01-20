@@ -15,7 +15,7 @@ end
 RSpec.describe MessageProcessor::ProcessorConcernStub, type: :processor do
   subject(:instance) { described_class.new(active_command) }
 
-  let(:participation)     { create :participation, user: user, chat: active_chat}
+  let(:participation)     { create :participation, user:, chat: active_chat }
   let(:user)              { create :user }
   let(:active_chat)       { create :chat }
   let(:inactive_chat)     { create :chat, :disabled }
@@ -45,7 +45,9 @@ RSpec.describe MessageProcessor::ProcessorConcernStub, type: :processor do
     end
 
     context 'with username' do
-      let(:active_command) { build :tg_message, :command_me_username, from: { id: user.id }, chat: { id: active_chat.telegram_id } }
+      let(:active_command) do
+        build :tg_message, :command_me_username, from: { id: user.id }, chat: { id: active_chat.telegram_id }
+      end
 
       it 'returns bare command' do
         expect(instance.send(:command)).to eq 'me'

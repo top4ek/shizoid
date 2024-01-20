@@ -28,7 +28,7 @@ class Participation < ApplicationRecord
       user = User.find_by(id: message&.from&.id)
       return if chat.nil? || user.nil?
 
-      Participation.find_or_create_by(chat: chat, user: user).learn(message)
+      Participation.find_or_create_by(chat:, user:).learn(message)
     end
   end
 end

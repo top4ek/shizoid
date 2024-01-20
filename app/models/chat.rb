@@ -63,7 +63,7 @@ class Chat < ApplicationRecord
   end
 
   def generate_reply(words)
-    Pair.build_sentence(chat: self, words: words) || Pair.build_sentence(chat: self, words_ids: context)
+    Pair.build_sentence(chat: self, words:) || Pair.build_sentence(chat: self, words_ids: context)
   end
 
   def generate_story

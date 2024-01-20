@@ -7,7 +7,7 @@ RSpec.describe Participation, type: :model do
   let(:tg_user)       { build :tg_user }
   let(:chat)          { create :chat, telegram_id: tg_chat.id }
   let(:user)          { create :user, id: tg_user.id }
-  let(:participation) { create :participation, user: user, chat: chat }
+  let(:participation) { create :participation, user:, chat: }
   let(:message)       { build :tg_message, chat: tg_chat, from: tg_user }
   let(:leave_message) { build :tg_message, chat: tg_chat, from: tg_user, left_chat_member: tg_user }
 

@@ -18,10 +18,15 @@ RSpec.describe Chat, type: :model do
   end
 
   describe '#choose_winner!' do
-    subject(:method_call) { chat.choose_winner!}
+    subject(:method_call) { chat.choose_winner! }
 
-    let!(:participations) { create_list :participation, 5, chat: chat }
-    let!(:candidates)     { chat.participations.scored.order(score: :desc).limit(3).map { |p| p.user.id } }
+    let(:participations) { create_list :participation, 5, chat: }
+    let(:candidates)     { chat.participations.scored.order(score: :desc).limit(3).map { |p| p.user.id } }
+
+    before do
+      participations
+      candidates
+    end
 
     it { expect(method_call).to be_a User }
 

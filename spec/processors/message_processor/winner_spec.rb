@@ -10,7 +10,7 @@ RSpec.describe MessageProcessor::Winner, type: :processor do
   let(:message_params) { { chat: { id: chat.telegram_id }, from: { id: user.id } } }
   let(:message)        { build :tg_message, message_params }
   let(:chat)           { create :chat, :disabled_random }
-  let(:participation)  { create :participation, user: user, chat: chat }
+  let(:participation)  { create :participation, user:, chat: }
 
   before { participation }
 
@@ -50,7 +50,7 @@ RSpec.describe MessageProcessor::Winner, type: :processor do
     describe 'responds with send_message' do
       subject(:send_message) { process_method[:send_message] }
 
-      let(:winners) { create_list :winner, 15, chat: chat }
+      let(:winners) { create_list :winner, 15, chat: }
 
       it 'chat_id' do
         expect(send_message[:chat_id]).to eq chat.telegram_id
@@ -80,7 +80,7 @@ RSpec.describe MessageProcessor::Winner, type: :processor do
                     .map { |(user, wins), idx| I18n.t('winner.top_line_html', position: idx + 1, user: user.to_s, score: wins) }
                     .join("\n")
           name = chat.winners.order(created_at: :desc).first.user.to_s
-          I18n.t('winner.winner_html', top: top, name: chat.winner, user: name)
+          I18n.t('winner.winner_html', top:, name: chat.winner, user: name)
         end
 
         before { winners }
@@ -98,7 +98,7 @@ RSpec.describe MessageProcessor::Winner, type: :processor do
     describe 'responds with send_message' do
       subject(:send_message) { process_method[:send_message] }
 
-      let(:participations) { create_list :participation, 15, chat: chat }
+      let(:participations) { create_list :participation, 15, chat: }
 
       it 'chat_id' do
         expect(send_message[:chat_id]).to eq chat.telegram_id
@@ -122,7 +122,7 @@ RSpec.describe MessageProcessor::Winner, type: :processor do
                   .map do |p, i|
                     I18n.t('winner.top_line_html', position: i + 1, user: p.user.to_s, score: p.score) if p.user.present?
                   end.compact.join("\n")
-        expected_result = I18n.t('winner.current_html', top: top)
+        expected_result = I18n.t('winner.current_html', top:)
 
         expect(send_message[:text]).to eq expected_result
       end

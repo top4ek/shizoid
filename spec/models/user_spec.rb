@@ -7,7 +7,7 @@ RSpec.describe User, type: :model do
   let(:user)    { create :user, id: tg_user.id }
   let(:message) { build :tg_message, from: tg_user }
 
-  it { should have_many(:chats).through(:participations) }
+  it { is_expected.to have_many(:chats).through(:participations) }
 
   it 'has valid factory' do
     expect(user).to be_valid

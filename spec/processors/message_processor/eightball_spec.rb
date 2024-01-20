@@ -20,11 +20,13 @@ RSpec.describe MessageProcessor::Eightball, type: :processor do
   let(:off_command) { build :tg_message, :command_empty_eightball, message_params.merge!(text: '/eightball off') }
   let(:enable_command) do
     build :tg_message, :command_empty_eightball,
-                       message_params.merge!(chat: { id: disabled_chat.telegram_id }, text: '/eightball enable')
+          message_params.merge!(chat: { id: disabled_chat.telegram_id },
+                                text: '/eightball enable')
   end
   let(:on_command) do
     build :tg_message, :command_empty_eightball,
-                       message_params.merge!(chat: { id: disabled_chat.telegram_id }, text: '/eightball on')
+          message_params.merge!(chat: { id: disabled_chat.telegram_id },
+                                text: '/eightball on')
   end
 
   it 'has message model trait' do

@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe WinnerGambleWorker, type: :worker do
   let(:chat)           { create :chat }
-  let(:participations) { create :participation, chat: chat }
+  let(:participations) { create :participation, chat: }
 
   it 'enqueues a worker' do
     expect { described_class.perform_async }

@@ -63,7 +63,7 @@ FactoryBot.define do
     end
 
     trait :command_databank_enable do
-      text     { "/databank enable" }
+      text     { '/databank enable' }
       entities { [{ type: 'bot_command', offset: 0, length: 9 }] }
     end
 
@@ -163,7 +163,7 @@ FactoryBot.define do
     end
 
     trait :command_empty_eightball do
-      text     { "/eightball" }
+      text     { '/eightball' }
       entities { [{ type: 'bot_command', offset: 0, length: 10 }] }
     end
 

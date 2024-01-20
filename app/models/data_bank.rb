@@ -5,10 +5,10 @@ class DataBank < ApplicationRecord
 
   class << self
     def update(filename:, id: nil, name: nil)
-      databank = Databank.find_by(id: id) || Databank.create(name: name)
+      databank = Databank.find_by(id:) || Databank.create(name:)
       databank.pairs.destroy
       words = File.read(filename, 'r').split(' ')
-      Pair.learn(chat_id: nil, data_bank_id: databank.id, words: words)
+      Pair.learn(chat_id: nil, data_bank_id: databank.id, words:)
     end
   end
 end
