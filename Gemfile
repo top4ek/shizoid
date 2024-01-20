@@ -13,9 +13,9 @@ gem 'redis'
 gem 'sentry-rails'
 gem 'sentry-ruby'
 gem 'sentry-sidekiq'
-gem 'sidekiq'
+gem 'sidekiq', '< 7'
 gem 'sidekiq-cron'
-gem 'sidekiq-limit_fetch', github: 'top4ek/sidekiq-limit_fetch', ref: 'd7f934259a0d0b925f4395df5e897fa25b387817'
+gem 'sidekiq-limit_fetch'
 gem 'telegram-bot-ruby'
 
 group :development, :test do
