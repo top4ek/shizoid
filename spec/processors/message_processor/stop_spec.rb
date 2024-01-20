@@ -26,10 +26,6 @@ RSpec.describe MessageProcessor::Stop, type: :processor do
       expect(described_class.new(ping).responds?).to eq false
     end
 
-    it 'non /stop command' do
-      expect(described_class.new(ping).responds?).to eq false
-    end
-
     it 'empty text' do
       expect(described_class.new(picture).responds?).to eq false
     end
@@ -42,7 +38,7 @@ RSpec.describe MessageProcessor::Stop, type: :processor do
   it "doesn't disable chat by regular user" do
     expect do
       described_class.new(user_stop).process
-       chat.reload
+      chat.reload
     end.not_to change(chat.reload, :active_at)
   end
 

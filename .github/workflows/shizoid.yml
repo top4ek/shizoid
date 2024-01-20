@@ -7,7 +7,7 @@ jobs:
     name: Perform specs
     runs-on: ubuntu-latest
     services:
-      postgres:
+      database:
         image: postgres:alpine
         env:
           POSTGRES_USER: shizoid
@@ -20,7 +20,7 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-      redis:
+      cache:
         image: redis:alpine
         ports:
           - 6379:6379
@@ -31,7 +31,7 @@ jobs:
       - name: 'Setup Ruby'
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 3.0
+          ruby-version: 3.3.0
       - name: "Install required system packages"
         run: sudo apt-get update -y && sudo apt-get install openssh-client rsync libpq-dev cmake -y
       - name: "Bundle install"

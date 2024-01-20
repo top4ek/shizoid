@@ -52,9 +52,9 @@ module MessageProcessor
 
     def show
       databanks = DataBank.pluck(:id, :name).to_h
-      list = databanks.map { |id, name| I18n.t('.databank.list_line_html', id: id, name: name) }.join("\n")
+      list = databanks.map { |id, name| I18n.t('.databank.list_line_html', id:, name:) }.join("\n")
       active = chat.data_bank_ids.present? ? chat.data_bank_ids.to_sentence : I18n.t('false')
-      I18n.t('.databank.list_html', list: list, active: active)
+      I18n.t('.databank.list_html', list:, active:)
     end
   end
 end

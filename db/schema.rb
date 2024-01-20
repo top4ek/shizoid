@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_05_28_175808) do
+ActiveRecord::Schema[7.0].define(version: 2024_01_20_084922) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -30,24 +30,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_28_175808) do
     t.datetime "created_at", precision: nil, null: false
     t.datetime "active_at", precision: nil
     t.string "kind", limit: 32
-    t.integer "covid_region"
-    t.date "covid_last_notification"
     t.date "date"
-    t.datetime "casbanhammer_at"
     t.index ["telegram_id"], name: "index_chats_on_telegram_id", unique: true
-  end
-
-  create_table "covid_stats", force: :cascade do |t|
-    t.integer "region", null: false
-    t.date "date", null: false
-    t.integer "sick"
-    t.integer "healed"
-    t.integer "died"
-    t.integer "first"
-    t.integer "second"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["date", "region"], name: "index_covid_stats_on_date_and_region", unique: true
   end
 
   create_table "data_banks", force: :cascade do |t|
@@ -101,8 +85,6 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_28_175808) do
     t.string "language_code"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.datetime "casbanned_at", precision: nil
-    t.datetime "casbanchecked_at", precision: nil
   end
 
   create_table "winners", force: :cascade do |t|

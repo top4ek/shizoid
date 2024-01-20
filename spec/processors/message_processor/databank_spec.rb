@@ -18,9 +18,9 @@ RSpec.describe MessageProcessor::Databank, type: :processor do
 
       let(:expected_result) do
         databanks = DataBank.pluck(:id, :name).to_h
-        list = databanks.map { |id, name| I18n.t('.databank.list_line_html', id: id, name: name) }.join("\n")
+        list = databanks.map { |id, name| I18n.t('.databank.list_line_html', id:, name:) }.join("\n")
         active = chat.data_bank_ids.present? ? chat.data_bank_ids.to_sentence : I18n.t('false')
-        I18n.t('.databank.list_html', list: list, active: active)
+        I18n.t('.databank.list_html', list:, active:)
       end
 
       before { databanks }
@@ -90,7 +90,7 @@ RSpec.describe MessageProcessor::Databank, type: :processor do
       end
     end
 
-    context 'witout databank id' do
+    context 'without databank id' do
       let(:message) { build :tg_message, :command_databank_enable, message_params }
       let(:chat) { create :chat, :disabled_random, data_bank_ids: databanks.map(&:id) }
 
@@ -154,7 +154,7 @@ RSpec.describe MessageProcessor::Databank, type: :processor do
       end
     end
 
-    context 'witout databank id' do
+    context 'without databank id' do
       let(:message) { build :tg_message, :command_databank_disable, message_params }
 
       it 'resets data_bank_ids attribute' do

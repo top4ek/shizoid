@@ -32,7 +32,7 @@ module MessageProcessor
       return I18n.t('eightball.empty').sample if command_parameters.blank?
 
       answers = I18n.t('.eightball.replies')
-      digest = Digest::SHA1.hexdigest(command_parameters).to_i(16) - Date.today.to_time.to_i.div(100) - user.id
+      digest = Digest::SHA1.hexdigest(command_parameters).to_i(16) - Time.zone.today.to_time.to_i.div(100) - user.id
       answer_id = digest.divmod(answers.count)[1]
       answers[answer_id]
     end

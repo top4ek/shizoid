@@ -11,8 +11,6 @@ class Chat < ApplicationRecord
   scope :not_personal, -> { where.not(kind: 'private') }
   scope :with_winners, -> { where.not(winner: nil) }
 
-  enum covid_region: CovidStat.regions
-
   def winner_enabled?
     winner.present?
   end
@@ -51,10 +49,6 @@ class Chat < ApplicationRecord
     update!(active_at: nil)
   end
 
-  def casbanhammer?
-    casbanhammer_at.present?
-  end
-
   def self.learn(message)
     chat_payload = message.chat
     chat = Chat.find_or_initialize_by(telegram_id: chat_payload.id)
@@ -69,7 +63,7 @@ class Chat < ApplicationRecord
   end
 
   def generate_reply(words)
-    Pair.build_sentence(chat: self, words: words) || Pair.build_sentence(chat: self, words_ids: context)
+    Pair.build_sentence(chat: self, words:) || Pair.build_sentence(chat: self, words_ids: context)
   end
 
   def generate_story

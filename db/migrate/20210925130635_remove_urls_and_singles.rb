@@ -9,8 +9,8 @@ class RemoveUrlsAndSingles < ActiveRecord::Migration[6.1]
     drop_table :singles do |t|
       t.references :chat,       null: false
       t.references :word,       null: false
-      t.integer    :reply_type, null: true,  limit: 1
       t.string     :reply,      null: false
+      t.integer    :reply_type, null: true,  limit: 1
       t.integer    :count,      null: false, limit: 8, default: 0
     end
   end

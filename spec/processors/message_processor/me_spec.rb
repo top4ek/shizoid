@@ -43,7 +43,7 @@ RSpec.describe MessageProcessor::Me, type: :processor do
     subject(:result) { described_class.new(empty_me).process }
 
     it 'replies with predefined answers' do
-      replies = I18n.t('.me').map { |r| "<a href='tg://user?id=#{user.id}'>#{user.username}</a> #{r}"}
+      replies = I18n.t('.me').map { |r| "<a href='tg://user?id=#{user.id}'>#{user.username}</a> #{r}" }
       expect(replies).to include result[:send_message][:text]
     end
   end

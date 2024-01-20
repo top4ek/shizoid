@@ -1,11 +1,9 @@
 # frozen_string_literal: true
 
 module MessageProcessor
-  AVAILABLE_PROCESSORS = %w[CasBanner
-                            Me
+  AVAILABLE_PROCESSORS = %w[Me
                             Say
                             BinaryDice
-                            CovidStats
                             CoolStory
                             Databank
                             Eightball

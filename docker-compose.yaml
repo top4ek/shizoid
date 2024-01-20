@@ -15,8 +15,8 @@ services:
       - ./:/opt/app/src/
     command: bundle exec sidekiq -C config/sidekiq.yml
     depends_on:
-      - postgres
-      - redis
+      - database
+      - cache
 
   app:
     <<: *sidekiq
@@ -39,8 +39,10 @@ services:
       RAILS_ENV: test
     command: sh -c "bundle exec rails db:migrate && bundle exec guard start --no-bundler-warning"
 
-  redis:
-    image: redis:6-alpine
+  cache:
+    image: redis:alpine
+    ulimits:
+      memlock: -1
     restart: unless-stopped
     ports:
       - 6379:6379
@@ -50,8 +52,8 @@ services:
       timeout: 3s
       retries: 30
 
-  postgres:
-    image: postgres:14-alpine
+  database:
+    image: postgres:alpine
     env_file: .env.test
     environment:
       POSTGRES_USER: ${DATABASE_USERNAME}
@@ -64,23 +66,3 @@ services:
       interval: 10s
       timeout: 5s
       retries: 30
-
-  # receiver:
-  #   build:
-  #     context: ./receiver
-  #     target: dev
-  #     dockerfile: ./../config/deploy/Dockerfile.receiver
-  #   volumes:
-  #     - ./receiver:/opt/app
-  #   ports:
-  #   - 8181:8080
-    # - 2345:2345
-
-    # tor:
-  #   build:
-  #     context: config/deploy/
-  #     dockerfile: Dockerfile.tor
-  #     args:
-  #       CONTAINER_GID: '${CONTAINER_GID:-1000}'
-  #       CONTAINER_UID: '${CONTAINER_UID:-1000}'
-  #   restart: unless-stopped

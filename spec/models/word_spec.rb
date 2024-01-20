@@ -25,12 +25,12 @@ RSpec.describe Word, type: :model do
 
   describe '::learn' do
     it 'learns new words' do
-      expect { described_class.learn new_words }.to change(Word, :count).by new_words.size
+      expect { described_class.learn new_words }.to change(described_class, :count).by new_words.size
     end
 
     it "doesn't add already known words" do
       described_class.learn new_words
-      expect { described_class.learn new_words }.not_to change(Word, :count)
+      expect { described_class.learn new_words }.not_to change(described_class, :count)
     end
   end
 end

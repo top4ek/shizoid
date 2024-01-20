@@ -19,7 +19,7 @@ class Word < ApplicationRecord
       new_words = words - Word.where(word: words).pluck(:word)
       return nil if new_words.blank?
 
-      words_array = new_words.uniq.map { |word| { word: word} }
+      words_array = new_words.uniq.map { |word| { word: } }
       Word.insert_all(words_array)
     end
   end

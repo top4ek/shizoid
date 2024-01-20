@@ -14,6 +14,18 @@ AllCops:
 Documentation:
   Enabled: false
 
+Style/StringLiterals:
+  Exclude:
+    - 'config/application.rb'
+    - 'config/boot.rb'
+    - 'config/environments/*'
+    - 'config/environment.rb'
+    - 'config/initializers/backtrace_silencers.rb'
+    - 'config.ru'
+
+RSpec/NestedGroups:
+  Max: 4
+
 Metrics/LineLength:
   Max: 130
 
@@ -28,14 +40,6 @@ Metrics/BlockLength:
     - put
     - post
     - delete
-
-Style/NumericPredicate:
-  Exclude:
-    - spec/**/*
-
-Style/HashSyntax:
-  Enabled: true
-  EnforcedStyle: ruby19
 
 Metrics/AbcSize:
   Max: 30

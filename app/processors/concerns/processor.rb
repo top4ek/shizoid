@@ -69,6 +69,6 @@ module Processor
   end
 
   def participation
-    @participation ||= Participation.find_by!(chat: chat, user: user)
+    @participation ||= Participation.find_by!(chat:, user:)
   end
 end

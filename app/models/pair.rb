@@ -18,10 +18,10 @@ class Pair < ApplicationRecord
   end
 
   class << self
-    def learn(chat: nil, data_bank: nil, words:)
+    def learn(words:, chat: nil, data_bank: nil)
       raise 'Chat OR Databank must be specified' if chat.nil? == data_bank.nil?
-      Word.learn(words)
 
+      Word.learn(words)
       words_array = [nil]
       words.each do |word|
         words_array << word
@@ -37,8 +37,8 @@ class Pair < ApplicationRecord
           next
         end
         words_ids.shift
-        pair_params = { chat: chat,
-                        data_bank: data_bank,
+        pair_params = { chat:,
+                        data_bank:,
                         first_id: trigram.first,
                         second_id: trigram.second }
         pair = Pair.includes(:replies).find_or_create_by!(pair_params)
@@ -52,13 +52,13 @@ class Pair < ApplicationRecord
       words_ids = Word.to_ids(words) if words.present?
       sentence = []
       safety_counter = 50
-      pair_params = { chat: chat, first_id: nil, second_id: words_ids }
+      pair_params = { chat:, first_id: nil, second_id: words_ids }
 
       while (pair = fetch_pair(pair_params)) && (sentence.size < safety_counter) do
         replies = pair.replies.order(count: :desc)
         replies_pool = 3 + replies.size / 2
         reply = replies.limit(replies_pool).sample
-        pair_params = { chat: chat, first_id: pair.second_id, second_id: reply&.word_id }
+        pair_params = { chat:, first_id: pair.second_id, second_id: reply&.word_id }
         sentence << pair.second_id if sentence.empty?
         reply&.word_id.nil? ? break : sentence << reply.word_id
       end

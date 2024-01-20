@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe MessageProcessor::BinaryDice, type: :processor do
@@ -5,7 +7,7 @@ RSpec.describe MessageProcessor::BinaryDice, type: :processor do
 
   let(:instance)       { described_class.new(message) }
   let(:user)           { create :user }
-  let(:message_params) { { text: text, chat: { id: chat.telegram_id }, from: { id: user.id } } }
+  let(:message_params) { { text:, chat: { id: chat.telegram_id }, from: { id: user.id } } }
   let(:message)        { build :tg_message, message_params }
   let(:chat)           { create :chat, :disabled_random }
 

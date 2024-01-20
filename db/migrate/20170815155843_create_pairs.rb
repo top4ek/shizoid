@@ -7,6 +7,6 @@ class CreatePairs < ActiveRecord::Migration[5.1]
       t.references :first, null: true
       t.references :second, null: true
     end
-    add_index :pairs, [ :first_id, :second_id, :chat_id ], unique: true
+    add_index :pairs, %i[first_id second_id chat_id], unique: true
   end
 end

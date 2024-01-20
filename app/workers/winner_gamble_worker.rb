@@ -18,7 +18,7 @@ class WinnerGambleWorker
               .map { |(user, wins), idx| I18n.t('winner.top_line_html', position: idx + 1, user: user.to_s, score: wins) }
               .join("\n")
 
-    parameters = { text: I18n.t('winner.winner_html', top: top, name: chat.winner, user: winner.to_link),
+    parameters = { text: I18n.t('winner.winner_html', top:, name: chat.winner, user: winner.to_link),
                    parse_mode: :html,
                    disable_notification: true,
                    chat_id: chat.telegram_id }

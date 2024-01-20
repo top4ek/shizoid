@@ -63,7 +63,7 @@ FactoryBot.define do
     end
 
     trait :command_databank_enable do
-      text     { "/databank enable" }
+      text     { '/databank enable' }
       entities { [{ type: 'bot_command', offset: 0, length: 9 }] }
     end
 
@@ -75,26 +75,6 @@ FactoryBot.define do
     trait :command_databank do
       text     { '/databank' }
       entities { [{ type: 'bot_command', offset: 0, length: 9 }] }
-    end
-
-    trait :command_covid_stats_enable do
-      text     { "/covid_stats enable #{CovidStat.regions.keys.sample}" }
-      entities { [{ type: 'bot_command', offset: 0, length: 12 }] }
-    end
-
-    trait :command_covid_stats_disable do
-      text     { '/covid_stats disable' }
-      entities { [{ type: 'bot_command', offset: 0, length: 12 }] }
-    end
-
-    trait :command_covid_stats_available do
-      text     { '/covid_stats available' }
-      entities { [{ type: 'bot_command', offset: 0, length: 12 }] }
-    end
-
-    trait :command_covid_stats do
-      text     { '/covid_stats' }
-      entities { [{ type: 'bot_command', offset: 0, length: 12 }] }
     end
 
     trait :command_winner_enable do
@@ -183,7 +163,7 @@ FactoryBot.define do
     end
 
     trait :command_empty_eightball do
-      text     { "/eightball" }
+      text     { '/eightball' }
       entities { [{ type: 'bot_command', offset: 0, length: 10 }] }
     end
 
@@ -195,21 +175,5 @@ FactoryBot.define do
     trait :new_chat_members do
       new_chat_members { Array.new(2) { association :tg_user } }
     end
-
-    trait :command_cas_enable do
-      text     { "/cas enable #{CovidStat.regions.keys.sample}" }
-      entities { [{ type: 'bot_command', offset: 0, length: 4 }] }
-    end
-
-    trait :command_cas_disable do
-      text     { '/cas disable' }
-      entities { [{ type: 'bot_command', offset: 0, length: 4 }] }
-    end
-
-    trait :command_cas do
-      text     { '/cas' }
-      entities { [{ type: 'bot_command', offset: 0, length: 4 }] }
-    end
-
   end
 end

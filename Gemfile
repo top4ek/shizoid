@@ -24,8 +24,10 @@ group :development, :test do
   gem 'factory_bot_rails'
   gem 'ffaker'
   gem 'guard'
-  gem 'guard-rake'
-  gem 'guard-rspec'
+  gem 'guard-bundler', require: false
+  gem 'guard-rake', require: false
+  gem 'guard-rspec', require: false
+  gem 'guard-rubocop', require: false
   gem 'listen'
   gem 'rack-test'
   gem 'rspec'
