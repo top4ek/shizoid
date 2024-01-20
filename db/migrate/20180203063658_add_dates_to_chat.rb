@@ -3,8 +3,8 @@
 class AddDatesToChat < ActiveRecord::Migration[5.1]
   def up
     change_table :chats, bulk: true do |t|
-      t.datetime :chats, :created_at, null: false, default: Time.current
-      t.datetime :chats, :active_at, null: true, default: nil
+      t.datetime :created_at, null: false, default: Time.current
+      t.datetime :active_at, null: true, default: nil
     end
 
     Chat.where(active: true).each { |c| c.update(active_at: Time.current) }
