@@ -73,15 +73,15 @@ class Chat < ApplicationRecord
   def context(ids = nil)
     size = Rails.configuration.secrets[:context_size]
     current = RedisService.lrange(redis_context_path, 0, size).map(&:to_i)
-    return current.shuffle if ids.nil?
+    return current if ids.nil?
 
-    uniq_ids = ids.uniq
-    current -= uniq_ids
-    current.unshift(*uniq_ids)
+    uniq_ids = ids.map(&:to_i).uniq
+    current = (uniq_ids | current).compact_blank.first(size)
     RedisService.multi do |r|
       r.del(redis_context_path)
-      r.lpush(redis_context_path, current.first(size))
+      r.lpush(redis_context_path, current)
     end
+    current
   end
 
   private

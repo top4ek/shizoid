@@ -17,6 +17,57 @@ RSpec.describe Chat, type: :model do
     expect(chat).to be_valid
   end
 
+  describe '#context' do
+    subject(:method_call) { chat.context(new_ids) }
+
+    let(:redis_key) { "chat_context/#{chat.id}" }
+    let(:old_ids)   { %w[4 5 6 2] }
+
+    after { RedisService.del(redis_key) }
+
+    context 'when new ids absend' do
+      let(:new_ids) { nil }
+
+      context 'when context is empty' do
+        it 'returns empty array' do
+          expect(method_call).to eq []
+        end
+      end
+
+      context 'when context is not empty' do
+        before { RedisService.lpush(redis_key, old_ids) }
+
+        it 'returns empty array' do
+          expect(method_call).to match_array old_ids.map(&:to_i)
+        end
+      end
+    end
+
+    context 'when new ids present' do
+      let(:new_ids) { %w[1 2 3 4] }
+
+      context 'when context is empty' do
+        before { RedisService.del(redis_key) }
+
+        it 'adds new context' do
+          method_call
+          result = RedisService.lrange(redis_key, 0, 50)
+          expect(result).to match_array new_ids
+        end
+      end
+
+      context 'when context has smth' do
+        before { RedisService.lpush(redis_key, old_ids) }
+
+        it 'merges context' do
+          method_call
+          result = RedisService.lrange(redis_key, 0, 50)
+          expect(result).to match_array(new_ids | old_ids)
+        end
+      end
+    end
+  end
+
   describe '#choose_winner!' do
     subject(:method_call) { chat.choose_winner! }
 

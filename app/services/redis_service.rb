@@ -6,6 +6,6 @@ module RedisService
       @connection ||= Redis.new(Rails.configuration.secrets[:cache_redis])
     end
 
-    delegate :multi, :lrange, :set, :get, :incr, :decr, to: :connection
+    delegate :del, :ltrim, :lpush, :rpush, :multi, :lrange, :set, :get, :incr, :decr, to: :connection
   end
 end
