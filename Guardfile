@@ -1,5 +1,15 @@
 # frozen_string_literal: true
 
+guard :bundler do
+  watch('Gemfile')
+  watch('Gemfile.lock')
+end
+
+guard :rubocop do
+  watch(%r{.+\.rb$})
+  watch(%r{(?:.+/)?\.rubocop\.yml$}) { |m| File.dirname(m[0]) }
+end
+
 guard :rspec, cmd: 'bundle exec rspec' do
   require 'guard/rspec/dsl'
   dsl = Guard::RSpec::Dsl.new(self)
@@ -17,8 +27,6 @@ guard :rspec, cmd: 'bundle exec rspec' do
   dsl.watch_spec_files_for(rails.views)
 
   watch(rails.controllers) { |m| [rspec.spec.call("controllers/#{m[1]}_controller")] }
-  watch(rails.controllers) { |m| [rspec.spec.call("request/#{m[1]}")] }
-
   watch(rails.spec_helper)     { rspec.spec_dir }
   watch(rails.app_controller)  { "#{rspec.spec_dir}/controllers" }
 end

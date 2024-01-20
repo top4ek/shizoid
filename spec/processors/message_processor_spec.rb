@@ -8,11 +8,9 @@ RSpec.describe MessageProcessor, type: :processor do
   let(:message) { FactoryBot.build :tg_message }
 
   let(:available_processors) do
-    %w[CasBanner
-       Me
+    %w[Me
        Say
        BinaryDice
-       CovidStats
        CoolStory
        Databank
        Eightball

@@ -11,8 +11,6 @@ class Chat < ApplicationRecord
   scope :not_personal, -> { where.not(kind: 'private') }
   scope :with_winners, -> { where.not(winner: nil) }
 
-  enum covid_region: CovidStat.regions
-
   def winner_enabled?
     winner.present?
   end
@@ -49,10 +47,6 @@ class Chat < ApplicationRecord
 
   def disable!
     update!(active_at: nil)
-  end
-
-  def casbanhammer?
-    casbanhammer_at.present?
   end
 
   def self.learn(message)

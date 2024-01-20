@@ -56,7 +56,6 @@ RSpec.describe MessageProcessor::Status, type: :processor do
                                    gab: chat.random,
                                    pairs: chat.pairs.size,
                                    databanks: I18n.t(chat.data_bank_ids.present?.to_s),
-                                   cas_banner: I18n.t(chat.casbanhammer?.to_s),
                                    winner: chat.winner || t('.winner.disabled'))
 
       expect(response).to eq result[:send_message][:text]

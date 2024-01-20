@@ -15,60 +15,6 @@ RSpec.describe Participation, type: :model do
     expect(participation).to be_valid
   end
 
-  describe 'ban' do
-    subject(:method_call) { participation.ban }
-
-    let(:user) { create :user, :casbanned }
-
-    it 'updates participation status' do
-      expect { method_call }.to change(participation, :left).from(false).to(true)
-    end
-
-    it 'sends ban command to tg' do
-      allow(SendPayloadWorker).to receive(:perform_async)
-
-      method_call
-
-      expect(SendPayloadWorker).to have_received(:perform_async).exactly(Rails.application.secrets[:telegram][:owners].size).times
-    end
-  end
-
-  describe 'ban_all' do
-    subject(:method_call) { described_class.ban_all }
-
-    let(:cas_chat)              { create :chat, :casban_enabled }
-    let(:banned_user)           { create :user, :casbanned }
-    let(:banned_participations) { create_list :participation, 5, user: banned_user }
-    let(:target_participation)  { create :participation, user: banned_user, chat: cas_chat }
-    let(:participations)        { banned_participations.map { |p| create :participation, chat: p.chat } }
-
-    before do
-      participations
-      target_participation
-    end
-
-    it "doesn't update other users participations" do
-      expect do
-        method_call
-        participations.each(&:reload)
-      end.not_to change { participations.map(&:left) }
-    end
-
-    it "doesn't update participations with cas turned off" do
-      expect do
-        method_call
-        banned_participations.each(&:reload)
-      end.not_to change { banned_participations.map(&:left) }
-    end
-
-    it 'updates participation status' do
-      expect do
-        method_call
-        target_participation.reload
-      end.to change(target_participation, :left)
-    end
-  end
-
   describe 'learn' do
     it 'creates participation' do
       chat
