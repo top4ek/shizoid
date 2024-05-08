@@ -1,11 +1,11 @@
-FROM docker.io/ruby:3.3.0-alpine
+FROM docker.io/ruby:3.3.1-alpine
 EXPOSE 3000
 WORKDIR /opt/app/src
 ENV LANG ru_RU.utf8
 
 RUN apk add --no-cache --update git build-base ca-certificates less postgresql-dev postgresql-client tzdata make libffi-dev libxml2 libxml2-dev libxslt-dev && \
-    cp /usr/share/zoneinfo/Europe/Moscow /etc/localtime && \
-    echo "Europe/Moscow" > /etc/timezone
+  cp /usr/share/zoneinfo/Europe/Moscow /etc/localtime && \
+  echo "Europe/Moscow" > /etc/timezone
 
 ADD Gemfile Gemfile.lock /opt/app/src/
 RUN bundle config without production && bundle install --retry=3 --jobs 20
