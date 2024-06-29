@@ -1,4 +1,6 @@
 # frozen_string_literal: true
+
+#
 # FactoryBot.define do
 #   factory :tg_callback_query, class: Telegram::Bot::Types::CallbackQuery do
 #   end

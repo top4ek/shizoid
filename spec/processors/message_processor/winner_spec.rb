@@ -25,7 +25,7 @@ RSpec.describe MessageProcessor::Winner, type: :processor do
     end
 
     it "doesn't repsond to text" do
-      expect(process_method).to eq nil
+      expect(process_method).to be_nil
     end
   end
 
@@ -33,7 +33,7 @@ RSpec.describe MessageProcessor::Winner, type: :processor do
     let(:chat) { create :chat, :disabled }
 
     it "doesn't repsond to command" do
-      expect(process_method).to eq nil
+      expect(process_method).to be_nil
     end
 
     it "doesn't process background tasks" do

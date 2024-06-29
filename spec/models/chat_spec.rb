@@ -101,15 +101,15 @@ RSpec.describe Chat, type: :model do
     end
 
     it 'enable!' do
-      expect(disabled_chat.disabled?).to eq true
+      expect(disabled_chat).to be_disabled
       disabled_chat.enable!
-      expect(disabled_chat.enabled?).to eq true
+      expect(disabled_chat).to be_enabled
     end
 
     it 'disable!' do
-      expect(chat.disabled?).to eq false
+      expect(chat).not_to be_disabled
       chat.disable!
-      expect(chat.enabled?).to eq false
+      expect(chat).not_to eq be_enabled
     end
   end
 

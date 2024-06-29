@@ -3,7 +3,7 @@
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby '3.3.1'
+ruby '3.3.3'
 
 gem 'faraday'
 gem 'pg'
@@ -16,7 +16,7 @@ gem 'sentry-sidekiq'
 gem 'sidekiq', '< 7'
 gem 'sidekiq-cron'
 gem 'sidekiq-limit_fetch'
-gem 'telegram-bot-ruby'
+gem 'telegram-bot-ruby', '~> 0.23.0'
 
 group :development, :test do
   gem 'debug'

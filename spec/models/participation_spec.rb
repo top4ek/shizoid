@@ -21,7 +21,7 @@ RSpec.describe Participation, type: :model do
       user
       expect { described_class.learn(message) }.to change(described_class, :count).by(1)
       last = described_class.last
-      expect(last.left?).to eq false
+      expect(last).not_to be_left
       expect(last.active_at).not_to be_nil
     end
 
@@ -30,7 +30,7 @@ RSpec.describe Participation, type: :model do
       user
       participation
       expect { described_class.learn(leave_message) }.not_to change(described_class, :count)
-      expect(participation.reload.left?).to eq true
+      expect(participation.reload).to be_left
     end
   end
 end

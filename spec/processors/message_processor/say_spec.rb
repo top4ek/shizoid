@@ -17,25 +17,25 @@ RSpec.describe MessageProcessor::Say, type: :processor do
 
   it 'has message model trait' do
     text_starts_with = say.text.starts_with? '/say '
-    expect(text_starts_with).to eq true
+    expect(text_starts_with).to be true
   end
 
   describe '#responds?' do
     it 'diasbled chat' do
       chat.disable!
-      expect(described_class.new(say).responds?).to eq false
+      expect(described_class.new(say).responds?).to be false
     end
 
     it 'non /say command' do
-      expect(described_class.new(ping).responds?).to eq false
+      expect(described_class.new(ping).responds?).to be false
     end
 
     it 'empty text' do
-      expect(described_class.new(picture).responds?).to eq false
+      expect(described_class.new(picture).responds?).to be false
     end
 
     it 'non command' do
-      expect(described_class.new(text).responds?).to eq false
+      expect(described_class.new(text).responds?).to be false
     end
   end
 
@@ -43,7 +43,7 @@ RSpec.describe MessageProcessor::Say, type: :processor do
     subject(:result) { described_class.new(say).process }
 
     it 'just answers' do
-      expect(result[:send_message][:reply_to_message_id]).to eq nil
+      expect(result[:send_message][:reply_to_message_id]).to be_nil
     end
   end
 

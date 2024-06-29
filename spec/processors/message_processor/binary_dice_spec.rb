@@ -15,7 +15,7 @@ RSpec.describe MessageProcessor::BinaryDice, type: :processor do
     let(:text) { FFaker::Lorem.sentence }
 
     it 'does nothing' do
-      expect(process_method).to eq nil
+      expect(process_method).to be_nil
     end
   end
 

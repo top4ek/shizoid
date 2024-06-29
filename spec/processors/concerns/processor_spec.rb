@@ -25,16 +25,16 @@ RSpec.describe MessageProcessor::ProcessorConcernStub, type: :processor do
 
   it 'reponds to active chat' do
     respond = instance.responds?
-    expect(respond).to eq true
+    expect(respond).to be true
   end
 
   it "doesn't respond to inactive chat" do
     respond = described_class.new(inactive_command).responds?
-    expect(respond).to eq false
+    expect(respond).to be false
   end
 
   it '#command?' do
-    expect(instance.send(:command?)).to eq true
+    expect(instance.send(:command?)).to be true
   end
 
   describe '#command' do

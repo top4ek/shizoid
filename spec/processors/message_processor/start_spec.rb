@@ -18,20 +18,20 @@ RSpec.describe MessageProcessor::Start, type: :processor do
 
   it 'has message model trait' do
     text_starts_with = owner_start.text.starts_with? '/start'
-    expect(text_starts_with).to eq true
+    expect(text_starts_with).to be true
   end
 
   describe '#responds?' do
     it 'diasbled chat' do
-      expect(described_class.new(ping).responds?).to eq false
+      expect(described_class.new(ping).responds?).to be false
     end
 
     it 'empty text' do
-      expect(described_class.new(picture).responds?).to eq false
+      expect(described_class.new(picture).responds?).to be false
     end
 
     it 'non command' do
-      expect(described_class.new(text).responds?).to eq false
+      expect(described_class.new(text).responds?).to be false
     end
   end
 

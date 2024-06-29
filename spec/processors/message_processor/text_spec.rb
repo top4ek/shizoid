@@ -18,19 +18,19 @@ RSpec.describe MessageProcessor::Text, type: :processor do
 
     it 'diasbled chat' do
       chat.disable!
-      expect(described_class.new(text).responds?).to eq false
+      expect(described_class.new(text).responds?).to be false
     end
 
     it 'command' do
-      expect(described_class.new(ping).responds?).to eq false
+      expect(described_class.new(ping).responds?).to be false
     end
 
     it 'empty text' do
-      expect(described_class.new(picture).responds?).to eq false
+      expect(described_class.new(picture).responds?).to be false
     end
 
     it 'text' do
-      expect(described_class.new(text).responds?).to eq true
+      expect(described_class.new(text).responds?).to be true
     end
   end
 

@@ -31,7 +31,7 @@ jobs:
       - name: 'Setup Ruby'
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 3.3.1
+          ruby-version: 3.3.3
       - name: "Install required system packages"
         run: sudo apt-get update -y && sudo apt-get install openssh-client rsync libpq-dev cmake -y
       - name: "Bundle install"

@@ -1,4 +1,4 @@
-FROM docker.io/ruby:3.3.1-alpine
+FROM docker.io/ruby:3.3.3-alpine
 EXPOSE 3000
 WORKDIR /opt/app/src
 ENV LANG ru_RU.utf8

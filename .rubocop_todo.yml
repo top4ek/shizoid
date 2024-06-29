@@ -44,20 +44,6 @@ Naming/AccessorMethodName:
 RSpec/ExampleLength:
   Max: 11
 
-# Offense count: 7
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: Include.
-# Include: spec/factories.rb, spec/factories/**/*.rb, features/support/factories/**/*.rb
-RSpec/FactoryBot/FactoryClassName:
-  Exclude:
-    - 'spec/factories/chat.rb'
-    - 'spec/factories/participation.rb'
-    - 'spec/factories/telegram/chat.rb'
-    - 'spec/factories/telegram/chat_photo.rb'
-    - 'spec/factories/telegram/update.rb'
-    - 'spec/factories/telegram/user.rb'
-    - 'spec/factories/user.rb'
-
 # Offense count: 1
 # Configuration parameters: Include, CustomTransform, IgnoreMethods, SpecSuffixOnly.
 # Include: **/*_spec*rb*, **/spec/**/*
